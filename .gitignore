@@ -1,0 +1,23 @@
+syntax: glob
+*.pyc
+*.pyo
+*.mo
+*.db
+local_settings.py
+
+deployment.wsgi
+
+djcelery
+.idea
+/etc/*.conf
+/etc/*.ini
+/etc/**/*.p12
+/bin
+/include
+/lib
+/local
+/log
+/static
+/media
+/tmp
+/venv

@@ -1,0 +1,3 @@
+django
+readability-lxml
+requests
