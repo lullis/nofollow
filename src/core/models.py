@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import os
 import hashlib
 import logging
@@ -31,8 +29,7 @@ class Document(object):
         try:
             with open(self.path, 'w') as converted_file:
                 converted_file.write(readable_doc.encode('utf-8'))
-
-        except Exception, e:
+        except Exception as e:
             os.remove(self.path)
             logger.warn(e)
             raise e

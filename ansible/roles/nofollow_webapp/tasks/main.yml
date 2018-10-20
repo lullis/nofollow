@@ -1,0 +1,60 @@
+---
+- name: create user account to run application
+  tags: webapp, account
+  become: true
+  user:
+    name: "{{ nofollow_app_username }}"
+    home: "{{ nofollow_app_user_home_folder_path }}"
+  when: nofollow_app_development is undefined
+
+- name: ensure we have necessary folders
+  tags: webapp, virtualenv, setup
+  become: true
+  become_user: "{{ nofollow_app_username }}"
+  file:
+    path: "{{ item }}"
+    owner: "{{ nofollow_app_username }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ nofollow_app_virtualenvs_container_folder_path }}"
+    - "{{ nofollow_app_log_folder_path }}"
+
+- name: install package dependencies
+  tags: webapp, packages, apt
+  become: true
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - python3
+    - python3-pip
+    - python3-dev
+    - libsasl2-dev
+    - libldap2-dev
+    - libssl-dev
+    - virtualenv
+    - git
+
+- name: clone git repo
+  tags: webapp, install, code
+  become: true
+  become_user: "{{ nofollow_app_username }}"
+  git:
+    dest: "{{ nofollow_app_repository_folder_path }}"
+  when: nofollow_app_development is undefined
+
+- name: install python package dependencies
+  tags: webapp, python, pip
+  become: true
+  become_user: "{{ nofollow_app_username }}"
+  pip:
+    virtualenv: "{{ nofollow_app_virtualenv_folder_path }}"
+    name: "file://{{ nofollow_app_code_folder_path }}"
+    virtualenv_python: python3
+
+- name: copy service environment variables
+  tags: webapp, systemd, environment
+  become: true
+  template:
+    src: templates/etc/nofollow.environment.j2
+    dest: "{{ nofollow_app_service_environment_file_path }}"

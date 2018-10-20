@@ -1,0 +1,7 @@
+---
+nofollow_app_development: false
+nofollow_app_username: nofollow
+nofollow_app_virtualenv_name: nofollow
+nofollow_app_service_environment_file_path: /etc/nofollow.environment
+nofollow_app_log_folder_path: /var/log/nofollow
+nofollow_app_log_file_name: nofollow_webapp.log

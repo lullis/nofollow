@@ -1,0 +1,22 @@
+---    
+- name: create vhost
+  tags: rabbitmq, configuration
+  become: true
+  rabbitmq_vhost:
+    name: "{{ nofollow_worker_message_queue_vhost }}"
+    state: present
+    
+- name: create user
+  tags: rabbitmq, account
+  become: true
+  rabbitmq_user:
+    state: present
+    force: true
+    user: "{{  nofollow_worker_message_queue_user }}"
+    password: "{{ nofollow_worker_message_queue_password }}"
+    tags: administrator
+    permissions:
+      - vhost: "{{ nofollow_worker_message_queue_vhost }}"
+        configure_priv: ".*"
+        read_priv: ".*"
+        write_priv: ".*"

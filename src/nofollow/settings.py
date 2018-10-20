@@ -1,30 +1,15 @@
-"""
-Django settings for nofollow project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
-"""
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*9v0okllbu_&uz&m2#@sjt7$p@x(b&vjv00q2z8nwt!_4e492$'
+SECRET_KEY = os.getenv('NOFOLLOW_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'NOFOLLOW_NODEBUG' not in os.environ
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,7 +25,7 @@ LIBRARY_APPS = [
 ]
 
 APPS = [
-    'nofollow'
+    'core'
     ]
 
 INSTALLED_APPS = tuple(LIBRARY_APPS + APPS)
@@ -59,16 +44,17 @@ ROOT_URLCONF = 'nofollow.urls'
 
 WSGI_APPLICATION = 'nofollow.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'app.db')
+        'ENGINE': os.getenv('NOFOLLOW_DATABASE_ENGINE'),
+        'HOST': os.getenv('NOFOLLOW_DATABASE_HOST'),
+        'PORT': os.getenv('NOFOLLOW_DATABASE_PORT', 5432),
+        'NAME': os.getenv('NOFOLLOW_DATABASE_NAME'),
+        'USER': os.getenv('NOFOLLOW_DATABASE_USER'),
+        'PASSWORD': os.getenv('NOFOLLOW_DATABASE_PASSWORD')
     }
 }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -76,11 +62,8 @@ DATABASES = {
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 

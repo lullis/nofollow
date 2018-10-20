@@ -1,13 +1,11 @@
-#!/usr/bin/env python
-
 from django.views.generic import TemplateView
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import status
 
-import serializers
-import models
+from . import serializers
+from . import models
 
 
 class ConversionView(CreateAPIView):

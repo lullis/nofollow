@@ -1,0 +1,45 @@
+# DATABASE
+NOFOLLOW_DATABASE_ENGINE="django.db.backends.postgresql"
+NOFOLLOW_DATABASE_HOST="{{ nofollow_database_host | default('localhost') }}"
+NOFOLLOW_DATABASE_NAME="{{ nofollow_database_name }}"
+NOFOLLOW_DATABASE_USER="{{ nofollow_database_username }}"
+NOFOLLOW_DATABASE_PASSWORD="{{ nofollow_database_password }}"
+
+# MESSAGE_BROKER
+NOFOLLOW_BROKER_URL="{{ rabbitmq_url }}"
+NOFOLLOW_BROKER_USE_SSL="{{ 1 if rabbitmq_use_ssl else 0 }}"
+
+
+# Application file location
+NOFOLLOW_STATIC_ROOT="{{ nofollow_app_static_root_path }}"
+NOFOLLOW_SITE_LOG_FILE="{{ nofollow_app_log_path }}"
+
+
+# Storage
+NOFOLLOW_STORAGE_URL="{{ nofollow_app_storage_url }}"
+NOFOLLOW_STORAGE_ACCESS_KEY="{{ minio_access_key }}"
+NOFOLLOW_STORAGE_SECRET_KEY="{{ minio_secret_key }}"
+NOFOLLOW_STORAGE_BUCKET_NAME="{{ nofollow_app_storage_bucket_name }}"
+
+# Email
+NOFOLLOW_EMAIL_MAILER_ADDRESS="{{ nofollow_app_emailer_address }}"
+NOFOLLOW_EMAIL_BACKEND="{{ nofollow_app_email_backend }}"
+NOFOLLOW_EMAIL_HOST="{{ nofollow_app_smtp_host|default('localhost') }}"
+NOFOLLOW_EMAIL_PORT="{{ nofollow_app_smtp_port|default(465) }}"
+NOFOLLOW_EMAIL_SMTP_USERNAME="{{ nofollow_app_smtp_username|default() }}"
+NOFOLLOW_EMAIL_SMTP_PASSWORD="{{ nofollow_app_smtp_password|default() }}"
+
+
+# UWSGI
+UWSGI_SOCKET="{{ nofollow_app_uwsgi_host|default('127.0.0.1') }}:{{ nofollow_app_uwsgi_port|default(3031) }}"
+UWSGI_MASTER="{{ nofollow_app_uwsgi_total_master_nodes|default(1) }}"
+UWSGI_WORKERS="{{ nofollow_app_uwsgi_total_worker_processes|default(4) }}"
+
+
+# DJANGO WEB APP
+NOFOLLOW_SECRET_KEY="{{ nofollow_app_secret_key }}"
+DJANGO_SETTINGS_MODULE="nofollow.settings"
+
+{% if not nofollow_app_development %}
+NOFOLLOW_NODEBUG=1
+{% endif %}
