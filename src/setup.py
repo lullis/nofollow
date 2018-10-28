@@ -10,6 +10,7 @@ setup(
     install_requires=[
         'boto3',
         'celery',
+        'dateparser',
         'django>=2.0',
         'django-allauth',
         'django_compressor',
@@ -19,6 +20,8 @@ setup(
         'django_smtp_ssl',
         'django-storages',
         'django-material',
+        'django-taggit',
+        'feedparser',
         'pillow',
         'psycopg2-binary',
         'readability-lxml',

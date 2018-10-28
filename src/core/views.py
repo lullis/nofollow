@@ -1,36 +1,87 @@
-from django.views.generic import TemplateView
+from django.contrib.syndication.views import Feed as BaseFeedView
+from django.views.generic import DetailView
+from django.utils.feedgenerator import Atom1Feed
 from rest_framework.generics import CreateAPIView
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from rest_framework import status
 
 from . import serializers
 from . import models
 
 
-class ConversionView(CreateAPIView):
-    serializer_class = serializers.ConverterSerializer
+class FeedView(BaseFeedView):
+    MAX_ITEMS_PER_FEED = 100
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        doc = models.Document(serializer.data['url'])
-        location = reverse('document-detail', request=request, kwargs={
-            'doc_hash': doc.hexdigest
-            })
-        if not doc.is_processed:
-            doc.process()
-            return Response(status=status.HTTP_201_CREATED, headers={'Location': location})
-        else:
-            return Response(status=status.HTTP_303_SEE_OTHER, headers={'Location': location})
+    feed_type = Atom1Feed
+
+    def get_object(self, request, feed_id):
+        return models.Feed.objects.get(id=feed_id)
+
+    def title(self, obj):
+        return obj.title
+
+    def link(self, obj):
+        return obj.url
+
+    def feed_url(self, obj):
+        return self.link(obj)
+
+    def description(self, obj):
+        return obj.description
+
+    def categories(self, obj):
+        return [c.name for c in obj.categories.all()]
+
+    def items(self, obj):
+        return obj.feedlink_set.select_related(
+            'link'
+            ).order_by('-updated_on')
+
+    def item_title(self, item):
+        return item.link.title
+
+    def item_description(self, item):
+        return item.content
+
+    def item_link(self, item):
+        return item.url
+
+    def item_guid_is_permalink(self, item):
+        return item.guid == item.url
+
+    def item_author_name(self, item):
+        return item.author_name
+
+    def item_author_link(self, item):
+        return item.author_link
+
+    def item_author_email(self, item):
+        return item.author_email
+
+    def item_pubdate(self, item):
+        return item.published_on
+
+    def item_updateddate(self, item):
+        return item.updated_on
+
+    def item_categories(self, item):
+        return [t.name for t in item.tags.all()]
+
+    def item_copyright(self, item):
+        return item.copyright
 
 
-class DocumentView(TemplateView):
-    template_name = 'converted.tmpl.html'
+class ProcessedFeedView(FeedView):
 
-    def get_context_data(self, **kw):
-        context = super(DocumentView, self).get_context_data(**kw)
-        document = models.ConvertedDocument(kw.get('doc_hash'))
-        with open(document.path) as doc_file:
-            context['converted_document'] = doc_file.read()
-        return context
+    def item_description(self, item):
+        return item.link.cleaned_html
+
+
+class EntrySubmissionView(CreateAPIView):
+    serializer_class = serializers.EntrySubmissionSerializer
+
+
+class UserFeedSubmissionSerializer(CreateAPIView):
+    serializer_class = serializers.UserFeedSubmissionSerializer
+
+
+class EntryDetailView(DetailView):
+    model = models.Entry

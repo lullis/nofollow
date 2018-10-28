@@ -21,7 +21,8 @@ LIBRARY_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework'
+    'rest_framework',
+    'taggit',
 ]
 
 APPS = [
@@ -30,15 +31,33 @@ APPS = [
 
 INSTALLED_APPS = tuple(LIBRARY_APPS + APPS)
 
-MIDDLEWARE_CLASSES = (
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': ['templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages'
+            ],
+        },
+    },
+]
+
 
 ROOT_URLCONF = 'nofollow.urls'
 
@@ -53,6 +72,12 @@ DATABASES = {
         'USER': os.getenv('NOFOLLOW_DATABASE_USER'),
         'PASSWORD': os.getenv('NOFOLLOW_DATABASE_PASSWORD')
     }
+}
+
+
+MESSAGE_BROKER = {
+    'URL': os.environ.get('NOFOLLOW_BROKER_URL'),
+    'USE_SSL': bool(int(os.environ.get('NOFOLLOW_BROKER_USE_SSL', 0)))
 }
 
 
@@ -75,3 +100,14 @@ STATIC_URL = '/static/'
 
 # Media files (user generated content)
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'media'))
+
+
+# REST API Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+# Taggit configuration
+TAGGIT_CASE_INSENSITIVE = True
