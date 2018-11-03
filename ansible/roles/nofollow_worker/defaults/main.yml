@@ -1,0 +1,4 @@
+---
+- nofollow_worker_message_queue_vhost: nofollow
+- nofollow_worker_message_queue_user: nofollow
+

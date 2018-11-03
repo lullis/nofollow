@@ -1,0 +1,32 @@
+---
+- hosts: all
+  gather_facts: false
+  pre_tasks:
+    - include: setup.yml
+    
+- hosts: web_servers
+  become: true
+  roles:
+    - role: geerlingguy.nginx    
+    - role: mushroomlabs.certbot
+
+- hosts: database_servers
+  become: true
+  roles:
+    - role: ANXS.postgresql
+
+- hosts: message_queue_servers
+  become: true
+  roles:
+    - role: stouts.rabbitmq
+
+- hosts: web_application_servers
+  become: true
+  roles:
+    - role: nofollow_webapp
+
+- hosts: web_workers
+  become: true
+  roles:
+    - role: nofollow_worker
+      

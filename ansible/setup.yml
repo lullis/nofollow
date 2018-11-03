@@ -1,0 +1,27 @@
+--- 
+- name: bootstrap python (for ansible)
+  become: true
+  raw: test -e /usr/bin/python || (apt -y update && apt install -y python)
+  changed_when: False
+- setup: # original ansible pre_tasks
+
+- name: install debconf utils
+  become: true
+  apt:
+    name: debconf-utils
+
+- name: set to generate locales
+  become: true
+  debconf:
+    name: locales
+    question: locales/locales_to_be_generated
+    value: en_US.UTF-8 UTF-8, de_DE.UTF-8 UTF-8
+    vtype: multiselect
+
+- name: Set default locale to en_US.UTF-8
+  become: true
+  debconf:
+    name: locales
+    question: locales/default_environment_locale
+    value: en_US.UTF-8
+    vtype: select

@@ -5,11 +5,6 @@
   vars:
     - repository_path: /home/vagrant/code
 
-    - minio_host: localhost
-    - minio_use_ssl: false
-    - minio_access_key: minio_vagrant
-    - minio_secret_key: minio_secret
-
     - rabbitmq_use_ssl: false
     - rabbitmq_url: amqp://localhost
 
@@ -17,7 +12,6 @@
 
     - nofollow_app_service_environment_file_path: /etc/nofollow.environment
     - nofollow_app_virtualenv_name: nofollow
-    - nofollow_database_name: nofollow
     - nofollow_database_username: vagrant
     - nofollow_database_password: nofollow_web_db_pass
     - nofollow_app_static_root_path: /home/vagrant/nofollow_web/static
@@ -30,48 +24,18 @@
     - nofollow_app_user_home_folder_path: /home/vagrant
     - nofollow_app_repository_folder_path: /home/vagrant/code
     - nofollow_app_code_folder_path: /home/vagrant/code/src
-    - nofollow_app_storage_bucket_name: nofollow-dev
-    - nofollow_app_storage_url: "http://{{ public_ip }}:{{ minio_port }}"
-    - nofollow_worker_message_queue_vhost: nofollow
-    - nofollow_worker_message_queue_user: nofollow
     - nofollow_worker_message_queue_password: insecurepasswd_rabbitmq
 
 
   roles:
     - role: rabbitmq
-    - role: database
-    - role: minio      
+    - role: ANXS.postgresql
     - role: nofollow_webapp
     - role: nofollow_database
     - role: nofollow_worker
 
   pre_tasks:
-  - name: bootstrap python (for ansible)
-    become: true
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-    changed_when: False
-  - setup: # original ansible pre_tasks
-
-  - name: install debconf utils
-    become: true
-    apt:
-      name: debconf-utils
-
-  - name: set to generate locales
-    become: true
-    debconf:
-      name: locales
-      question: locales/locales_to_be_generated
-      value: en_US.UTF-8 UTF-8, de_DE.UTF-8 UTF-8
-      vtype: multiselect
-
-  - name: Set default locale to en_US.UTF-8
-    become: true
-    debconf:
-      name: locales
-      question: locales/default_environment_locale
-      value: en_US.UTF-8
-      vtype: select
+  - include: setup.yml
 
   - name: add some lines to .bashrc
     lineinfile:
