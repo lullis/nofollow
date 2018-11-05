@@ -3,8 +3,8 @@
   become: true
   become_user: postgres
   postgresql_user:
-    name: "{{ nofollow_database_username }}"
-    password: "{{ nofollow_database_password }}"
+    name: "{{ cindy_database_username }}"
+    password: "{{ cindy_database_password }}"
     encrypted: true
     state: present
     role_attr_flags: LOGIN,SUPERUSER
@@ -13,7 +13,7 @@
   become: true
   become_user: postgres
   postgresql_db:
-    name: "{{ nofollow_database_name }}"
-    owner: "{{ nofollow_database_username }}"
+    name: "{{ cindy_database_name }}"
+    owner: "{{ cindy_database_username }}"
     encoding: UTF-8
     state: present

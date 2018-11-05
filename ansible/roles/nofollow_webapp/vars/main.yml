@@ -1,3 +1,0 @@
----
-nofollow_app_virtualenvs_container_folder_path: "{{ nofollow_app_user_home_folder_path }}/.virtualenvs"
-nofollow_app_virtualenv_folder_path: "{{ nofollow_app_virtualenvs_container_folder_path }}/{{ nofollow_app_virtualenv_name }}"

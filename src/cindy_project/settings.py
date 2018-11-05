@@ -3,9 +3,9 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('NOFOLLOW_SECRET_KEY')
+SECRET_KEY = os.getenv('CINDY_SECRET_KEY')
 
-DEBUG = 'NOFOLLOW_NODEBUG' not in os.environ
+DEBUG = 'CINDY_NODEBUG' not in os.environ
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -26,7 +26,7 @@ LIBRARY_APPS = [
 ]
 
 APPS = [
-    'core'
+    'cindy'
     ]
 
 INSTALLED_APPS = tuple(LIBRARY_APPS + APPS)
@@ -59,25 +59,26 @@ TEMPLATES = [
 ]
 
 
-ROOT_URLCONF = 'nofollow.urls'
+ROOT_URLCONF = 'cindy_project.urls'
 
-WSGI_APPLICATION = 'nofollow.wsgi.application'
+WSGI_APPLICATION = 'cindy_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('NOFOLLOW_DATABASE_ENGINE'),
-        'HOST': os.getenv('NOFOLLOW_DATABASE_HOST'),
-        'PORT': os.getenv('NOFOLLOW_DATABASE_PORT', 5432),
-        'NAME': os.getenv('NOFOLLOW_DATABASE_NAME'),
-        'USER': os.getenv('NOFOLLOW_DATABASE_USER'),
-        'PASSWORD': os.getenv('NOFOLLOW_DATABASE_PASSWORD')
+        'ENGINE': os.getenv('CINDY_DATABASE_ENGINE'),
+        'HOST': os.getenv('CINDY_DATABASE_HOST'),
+        'PORT': os.getenv('CINDY_DATABASE_PORT', 5432),
+        'NAME': os.getenv('CINDY_DATABASE_NAME'),
+        'USER': os.getenv('CINDY_DATABASE_USER'),
+        'PASSWORD': os.getenv('CINDY_DATABASE_PASSWORD')
     }
 }
 
 
 MESSAGE_BROKER = {
-    'URL': os.environ.get('NOFOLLOW_BROKER_URL'),
-    'USE_SSL': bool(int(os.environ.get('NOFOLLOW_BROKER_USE_SSL', 0)))
+    'URL': os.getenv('CINDY_BROKER_URL'),
+    'USE_SSL': bool(int(os.getenv('CINDY_BROKER_USE_SSL', 0))),
+    'QUEUE_NAME': os.getenv('CINDY_BROKER_QUEUE_NAME', 'cindy')
 }
 
 

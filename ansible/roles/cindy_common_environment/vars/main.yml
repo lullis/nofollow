@@ -1,0 +1,5 @@
+---
+cindy_app_user_home_folder_path: "/home/{{ cindy_app_username }}"
+cindy_app_log_path: "{{ cindy_app_log_folder_path }}/app.log"
+cindy_app_virtualenvs_container_folder_path: "{{ cindy_app_user_home_folder_path }}/.virtualenvs"
+cindy_app_virtualenv_folder_path: "{{ cindy_app_virtualenvs_container_folder_path }}/{{ cindy_app_virtualenv_name }}"

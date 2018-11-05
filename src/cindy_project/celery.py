@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 class ServiceConfig(object):
-    name = 'nofollow'
+    name = settings.MESSAGE_BROKER.get('QUEUE_NAME')
     broker_url = settings.MESSAGE_BROKER.get('URL')
     broker_use_ssl = settings.MESSAGE_BROKER.get('USE_SSL', False)
 

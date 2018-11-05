@@ -3,8 +3,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='nofollow',
-    url='https://bitbucket.org/mushroomlabs/nofollow',
+    name='cindy',
+    url='https://bitbucket.org/lullis/cindy',
     version='0.0.1',
     packages=find_packages(),
     install_requires=[
@@ -32,5 +32,5 @@ setup(
     classifiers=[
         'Operating System :: Linux'
     ],
-    keywords='nofollow site'
+    keywords='crawling bookmark-manager readability feed-reader'
 )

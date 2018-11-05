@@ -6,21 +6,18 @@ BOX_USERNAME = 'vagrant'.freeze
 VAGRANT_API_VERSION = '2'.freeze
 
 BOX = {
-  'name' => ENV.fetch('NOFOLLOW_VAGRANT_BOX_NAME', 'nofollow-dev'),
-  'ip' => ENV.fetch('NOFOLLOW_VAGRANT_BOX_IP', '192.168.23.15'),
-  'memory' => ENV.fetch('NOFOLLOW_VAGRANT_BOX_MEMORY', 4096),
-  'cpus' => ENV.fetch('NOFOLLOW_VAGRANT_BOX_CPUS', 2)
+  'name' => ENV.fetch('CINDY_VAGRANT_BOX_NAME', 'cindy-dev'),
+  'ip' => ENV.fetch('CINDY_VAGRANT_BOX_IP', '192.168.23.15'),
+  'memory' => ENV.fetch('CINDY_VAGRANT_BOX_MEMORY', 4096),
+  'cpus' => ENV.fetch('CINDY_VAGRANT_BOX_CPUS', 2)
 }.freeze
 
 ANSIBLE = {
   'config_file' => ENV.fetch(
-    'NOFOLLOW_ANSIBLE_CONFIG_FILE', 'ansible/ansible.cfg'
+    'CINDY_ANSIBLE_CONFIG_FILE', 'ansible/ansible.cfg'
   ),
   'playbook' => ENV.fetch(
-    'NOFOLLOW_ANSIBLE_PLAYBOOK_NAME', 'ansible/vagrant.yml'
-  ),
-  'galaxy_roles_path' => ENV.fetch(
-    'NOFOLLOW_ANSIBLE_GALAXY_ROLES_PATH', '/etc/ansible/roles'
+    'CINDY_ANSIBLE_PLAYBOOK_NAME', 'ansible/vagrant.yml'
   )
 }.freeze
 

@@ -1,38 +1,44 @@
 ---
 - hosts: all
   gather_facts: false
+  become: true
 
   vars:
-    - repository_path: /home/vagrant/code
+    - cindy_app_development_mode: true
+    - cindy_database_username: vagrant
+    - cindy_database_password: insecurepasswd_database
+    - cindy_app_static_root_path: /home/vagrant/cindy_web/static
+    - cindy_app_email_backend: django.core.mail.backends.console.EmailBackend
+    - cindy_app_log_folder_path: /home/vagrant/cindy_web/logs
+    - cindy_app_secret_key: this_is_an_insecure_secret_key
+    - cindy_app_username: vagrant
+    - cindy_app_code_folder_path: /home/vagrant/code/src
+    - cindy_app_pypi_url: file:///home/vagrant/code/src
+    - cindy_message_queue_user_name: cindy
+    - cindy_message_queue_user_password: insecurepasswd_rabbitmq
+    - cindy_message_queue_vhost: /cindy
 
-    - rabbitmq_use_ssl: false
-    - rabbitmq_url: amqp://localhost
-
-    - nofollow_app_development: true
-
-    - nofollow_app_service_environment_file_path: /etc/nofollow.environment
-    - nofollow_app_virtualenv_name: nofollow
-    - nofollow_database_username: vagrant
-    - nofollow_database_password: nofollow_web_db_pass
-    - nofollow_app_static_root_path: /home/vagrant/nofollow_web/static
-    - nofollow_app_emailer_address: noreply@nofollow_dev.example.com
-    - nofollow_app_email_backend: django.core.mail.backends.console.EmailBackend
-    - nofollow_app_log_folder_path: /home/vagrant/nofollow_web/logs
-    - nofollow_app_log_path: "{{ nofollow_app_log_folder_path }}/app.log"
-    - nofollow_app_secret_key: "this-is-an-insecure-secret-key"
-    - nofollow_app_username: vagrant
-    - nofollow_app_user_home_folder_path: /home/vagrant
-    - nofollow_app_repository_folder_path: /home/vagrant/code
-    - nofollow_app_code_folder_path: /home/vagrant/code/src
-    - nofollow_worker_message_queue_password: insecurepasswd_rabbitmq
-
+    - rabbitmq_enabled: yes
+    - rabbitmq_plugins:
+        - rabbitmq_management
+    - rabbitmq_users:
+        - user: admin
+          password: admin
+          vhost: /
+          configure_priv: .*
+          read_priv: .*
+          write_priv: .*
+          tags: administrator
+        - user: "{{ cindy_message_queue_user_name }}"
+          password: "{{ cindy_message_queue_user_password }}"
+          vhost: "{{ cindy_message_queue_vhost }}"
+    - rabbitmq_vhosts: ["{{ cindy_message_queue_vhost }}"]
 
   roles:
-    - role: rabbitmq
+    - role: stouts.rabbitmq
     - role: ANXS.postgresql
-    - role: nofollow_webapp
-    - role: nofollow_database
-    - role: nofollow_worker
+    - role: cindy_common_environment
+    - role: cindy_database
 
   pre_tasks:
   - include: setup.yml
@@ -42,5 +48,5 @@
       name: /home/vagrant/.bashrc
       line: "{{ item }}"
     with_items:
-      - "set -a && source {{ nofollow_app_service_environment_file_path }} && set +a"
-      - "source /home/vagrant/.virtualenvs/{{ nofollow_app_virtualenv_name }}/bin/activate"
+      - "set -a && source {{ cindy_app_service_environment_file_path }} && set +a"
+      - "source /home/vagrant/.virtualenvs/{{ cindy_app_virtualenv_name }}/bin/activate"
