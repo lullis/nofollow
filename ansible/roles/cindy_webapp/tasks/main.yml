@@ -38,7 +38,7 @@
   tags: webapp, systemd
   become: true
   template:
-    src: service.j2
+    src: etc/systemd/system/cindy_webapp.j2
     dest: "/etc/systemd/system/{{ cindy_webapp_service_name }}.service"
 
 - name: enable service

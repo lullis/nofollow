@@ -42,4 +42,4 @@
     name: "{{ cindy_app_pypi_url }}"
     virtualenv_python: python3
     editable: "{{ cindy_app_development_mode }}"
-    
+    state: forcereinstall

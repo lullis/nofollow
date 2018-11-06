@@ -1,5 +1,5 @@
 [uwsgi]
-base = {{ cindy_app_user_home_path }}
+base = {{ cindy_app_user_home_folder_path }}
 home = {{ cindy_app_virtualenv_folder_path }}
 master = true
 processes = {{ ansible_processor_count }}
@@ -35,3 +35,4 @@ env = UWSGI_MASTER={{ cindy_webapp_uwsgi_total_master_nodes }}
 env = UWSGI_WORKERS={{ cindy_webapp_uwsgi_total_worker_processes|default(ansible_processor_count) }}
 env = CINDY_SECRET_KEY={{ cindy_app_secret_key }}
 env = DJANGO_SETTINGS_MODULE=cindy_project.settings
+env = VIRTUAL_ENV={{ cindy_app_virtualenv_folder_path }}
