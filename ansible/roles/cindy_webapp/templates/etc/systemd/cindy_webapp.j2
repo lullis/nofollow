@@ -1,0 +1,18 @@
+[Unit]
+Description=Cindy Web Application Service
+After=syslog.target
+
+[Service]
+EnvironmentFile={{ cindy_app_service_environment_file_path }}
+User={{ cindy_app_username }}
+Group=www-data
+ExecStart={{ cindy_app_virtualenv_folder_path }}/bin/uwsgi --ini {{ cindy_webapp_uwsgi_config_file_path }}
+WorkingDirectory={{ cindy_app_user_home_folder_path }}
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target

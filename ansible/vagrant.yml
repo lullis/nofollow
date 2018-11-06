@@ -11,9 +11,7 @@
     - cindy_app_secret_key: this_is_an_insecure_secret_key
     - cindy_app_username: vagrant
     - cindy_app_pypi_url: file:///home/vagrant/code/src
-    - cindy_broker_user_name: cindy
     - cindy_broker_user_password: insecurepasswd_rabbitmq
-    - cindy_broker_vhost: cindy
 
     - rabbitmq_enabled: yes
     - rabbitmq_plugins:
@@ -37,7 +35,8 @@
   roles:
     - role: stouts.rabbitmq
     - role: ANXS.postgresql
-    - role: cindy_common_environment
+    - role: cindy_webapp
+    - role: cindy_worker
     - role: cindy_database
 
   pre_tasks:

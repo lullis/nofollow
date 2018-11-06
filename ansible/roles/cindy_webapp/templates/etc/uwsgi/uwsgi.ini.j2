@@ -1,0 +1,37 @@
+[uwsgi]
+base = {{ cindy_app_user_home_path }}
+home = {{ cindy_app_virtualenv_folder_path }}
+master = true
+processes = {{ ansible_processor_count }}
+uid={{ cindy_app_username }}
+gid=www-data
+protocol = uwsgi
+
+socket = {{ cindy_webapp_uwsgi_host }}:{{ cindy_webapp_uwsgi_port }}
+
+chdir = %(base)
+mount = /={{ cindy_webapp_installed_path_result.stdout }}/wsgi.py
+manage-script-name = true
+
+vaccum = true
+
+env = CINDY_DATABASE_ENGINE=django.db.backends.postgresql
+env = CINDY_DATABASE_HOST={{ cindy_database_host | default('localhost') }}
+env = CINDY_DATABASE_NAME={{ cindy_database_name }}
+env = CINDY_DATABASE_USER={{ cindy_database_username }}
+env = CINDY_DATABASE_PASSWORD={{ cindy_database_password }}
+env = CINDY_BROKER_URL={{ cindy_broker_url }}
+env = CINDY_BROKER_USE_SSL={{ 1 if cindy_broker_use_ssl else 0 }}
+env = CINDY_STATIC_ROOT={{ cindy_app_static_root_path }}
+env = CINDY_SITE_LOG_FILE={{ cindy_app_log_path }}
+env = CINDY_EMAIL_MAILER_ADDRESS={{ cindy_app_emailer_address }}
+env = CINDY_EMAIL_BACKEND={{ cindy_app_email_backend }}
+env = CINDY_EMAIL_HOST={{ cindy_app_smtp_host|default('localhost') }}
+env = CINDY_EMAIL_PORT={{ cindy_app_smtp_port|default(465) }}
+env = CINDY_EMAIL_SMTP_USERNAME={{ cindy_app_smtp_username|default() }}
+env = CINDY_EMAIL_SMTP_PASSWORD={{ cindy_app_smtp_password|default() }}
+env = UWSGI_SOCKET={{ cindy_webapp_uwsgi_host }}:{{ cindy_webapp_uwsgi_port }}
+env = UWSGI_MASTER={{ cindy_webapp_uwsgi_total_master_nodes }}
+env = UWSGI_WORKERS={{ cindy_webapp_uwsgi_total_worker_processes|default(ansible_processor_count) }}
+env = CINDY_SECRET_KEY={{ cindy_app_secret_key }}
+env = DJANGO_SETTINGS_MODULE=cindy_project.settings

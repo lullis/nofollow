@@ -1,0 +1,45 @@
+---
+- name: create user account to run application
+  tags: webapp, account
+  become: true
+  user:
+    name: "{{ cindy_app_username }}"
+
+- name: ensure we have necessary folders
+  tags: webapp, virtualenv, setup
+  become: true
+  become_user: "{{ cindy_app_username }}"
+  file:
+    path: "{{ item }}"
+    owner: "{{ cindy_app_username }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ cindy_app_virtualenvs_container_folder_path }}"
+    - "{{ cindy_app_log_folder_path }}"    
+
+- name: install package dependencies
+  tags: webapp, packages, apt
+  become: true
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - python3
+    - python3-pip
+    - python3-dev
+    - libsasl2-dev
+    - libldap2-dev
+    - libssl-dev
+    - virtualenv
+    - gcc
+
+- name: install python package dependencies
+  tags: webapp, python, pip
+  become: true
+  become_user: "{{ cindy_app_username }}"
+  pip:
+    virtualenv: "{{ cindy_app_virtualenv_folder_path }}"
+    name: "{{ cindy_app_pypi_url }}"
+    virtualenv_python: python3
+    editable: "{{ cindy_app_development_mode }}"
+    

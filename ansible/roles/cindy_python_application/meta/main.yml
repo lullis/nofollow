@@ -1,4 +1,3 @@
 ---
 dependencies:
-  - role: ANXS.postgresql
   - role: cindy_common_environment

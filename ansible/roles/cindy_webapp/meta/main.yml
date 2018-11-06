@@ -1,0 +1,3 @@
+---
+dependencies:
+  - role: cindy_python_application
