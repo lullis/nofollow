@@ -1,31 +1,18 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    url(
-        r'^api/user/entries$',
+    path(
+        'api/user/entries',
         views.EntrySubmissionView.as_view(),
         name='entry-list'
     ),
-    url(
-        r'^api/user/feeds$',
+    path(
+        'api/user/feeds',
         views.UserFeedSubmissionSerializer.as_view(),
         name='user-feed-list'
     ),
-    url(
-        r'^feed/(?P<feed_id>\d+)$',
-        views.FeedView(),
-        name='feed'
-    ),
-    url(
-        r'^feed/(?P<feed_id>\d+)/processed$',
-        views.ProcessedFeedView(),
-        name='processed-feed'
-    ),
-    url(
-        r'^entry/(?P<id>\d+)$',
-        views.EntryDetailView.as_view(),
-        name='entry-detail'
-    )
+    path('feed/<int:id>', views.FeedView(), name='feed'),
+    path('feed/<int:id>/processed', views.ProcessedFeedView(), name='processed-feed')
 ]

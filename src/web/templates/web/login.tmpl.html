@@ -1,0 +1,16 @@
+{% extends "web/base.tmpl.html" %}
+{% block main_contents %}
+<div class="row">
+  <form action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+    <div class="col s12">
+      {{ form.as_div }}
+    </div>
+    <div class="col s12">
+      <button class="btn waves-effect waves-light right" type="submit">
+        Login
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

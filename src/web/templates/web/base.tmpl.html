@@ -1,0 +1,36 @@
+{% load static compress %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% compress css %}
+    {% include "material/includes/material_css.html" %}
+    <link rel="stylesheet" type="text/x-sass" href="{% static 'web/styles/site.sass' %}" />
+    {% endcompress %}
+    {% compress js %}
+    <script src="{% static 'material/js/jquery.js' %}"></script>
+    {% include "material/includes/material_js.html" %}
+    <script src="{% static 'web/scripts/csrf.js' %}"></script>
+    {% endcompress %}
+    <title>Cindy: Syndication and Link Cleaner</title>
+  </head>
+  <body class="{% block body_container_style %}{% endblock %}">
+    {% block header %}
+    <header>
+      <nav role="navigation">
+        <div class="container">
+          <a class="brand-logo" href="{% url 'home' %}">{{ request.site.name }}</a>
+        </div>
+      </nav>
+    </header>
+    {% endblock %}
+    {% block main %}
+    <main>
+      <div class="container">
+        {% block main_contents %}{% endblock %}
+      </div>
+    </main>
+    {% endblock %} <!-- Main Container -->
+    {% block footer %}{% endblock %}
+  </body>
+</html>

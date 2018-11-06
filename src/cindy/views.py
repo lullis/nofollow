@@ -1,5 +1,4 @@
 from django.contrib.syndication.views import Feed as BaseFeedView
-from django.views.generic import DetailView
 from django.utils.feedgenerator import Atom1Feed
 from rest_framework.generics import CreateAPIView
 
@@ -81,7 +80,3 @@ class EntrySubmissionView(CreateAPIView):
 
 class UserFeedSubmissionSerializer(CreateAPIView):
     serializer_class = serializers.UserFeedSubmissionSerializer
-
-
-class EntryDetailView(DetailView):
-    model = models.Entry

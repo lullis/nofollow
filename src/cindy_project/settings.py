@@ -1,8 +1,9 @@
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# SECURITY WARNING: keep the secret key used in production secret!
+
+BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+VIRTUALENV_DIR = os.environ.get('VIRTUAL_ENV')
+BIN_FOLDER = os.path.join(VIRTUALENV_DIR, 'bin')
 SECRET_KEY = os.getenv('CINDY_SECRET_KEY')
 
 DEBUG = 'CINDY_NODEBUG' not in os.environ
@@ -10,6 +11,8 @@ DEBUG = 'CINDY_NODEBUG' not in os.environ
 TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = ['*']
+
+SITE_ID = 1
 
 
 # Application definition
@@ -20,13 +23,18 @@ LIBRARY_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
     'rest_framework',
     'taggit',
+    'compressor',
+    'material.theme.teal',
+    'material'
 ]
 
 APPS = [
-    'cindy'
+    'cindy',
+    'web'
     ]
 
 INSTALLED_APPS = tuple(LIBRARY_APPS + APPS)
@@ -39,6 +47,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -97,17 +106,35 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.getenv('CINDY_STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder'
+)
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-sass', '{} {{infile}} {{outfile}}'.format(os.path.join(BIN_FOLDER, 'sassc'))),
+)
 
 # Media files (user generated content)
-MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'media'))
+MEDIA_ROOT = os.getenv('CINDY_MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 
 
 # REST API Configuration
+REST_RENDERERS = [
+    'rest_framework.renderers.JSONRenderer'
+]
+
+if DEBUG:
+    REST_RENDERERS.append('rest_framework.renderers.BrowsableAPIRenderer')
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'DEFAULT_RENDERER_CLASSES': tuple(REST_RENDERERS)
 }
 
 # Taggit configuration

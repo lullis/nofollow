@@ -1,0 +1,13 @@
+{% extends "web/base.tmpl.html" %}
+{% block main_contents %}
+<h2>My List</h2>
+<div class="row">
+  {% for link in links %}
+  <div class="card horizontal">
+    <div class="card-title">
+      <a href="{% url 'read' link.id %}">{{ link.title }}</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

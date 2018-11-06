@@ -1,0 +1,17 @@
+{% extends "web/base.tmpl.html" %}
+{% load rest_framework %}
+{% block main_contents %}
+<div class="row">
+  <form action="{% url 'submission' %}" method="POST">
+    {% csrf_token %}
+    <div class="col s12">
+      {% render_form serializer %}
+    </div>
+    <div class="col s12">
+      <button class="btn waves-effect waves-light right" type="submit">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

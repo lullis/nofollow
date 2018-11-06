@@ -1,51 +1,38 @@
 from rest_framework import serializers
 
 from . import tasks
-from . import models
 
 
 class URLSubmissionSerializer(serializers.Serializer):
     url = serializers.URLField(write_only=True)
 
-
-class EntrySubmissionSerializer(URLSubmissionSerializer):
+    def _has_submitted(self, url):
+        user = self.context['request'].user
+        return any([
+            user.entry_set.filter(link__url=url).exists(),
+            user.userfeed_set.filter(feed__url=url).exists()
+            ])
 
     def validate(self, data):
-        user = self.context['request'].user
-        if user.entry_set.filter(link__url=data['url']).exists():
-            raise serializers.ValidationError('URL has already submitted this link')
-
+        if self._has_submitted(data['url']):
+            raise serializers.ValidationError('URL has already submitted this URL')
         return data
 
     def create(self, validated_data):
-        link, created = models.Link.objects.get_or_create(
-            url=validated_data['url']
+        return tasks.handle_url_submission(
+            self.context['request'].user.id, validated_data['url']
         )
 
-        if not link.is_processed:
-            tasks.process_link(link.id)
 
-        return models.Entry.objects.create(
-            user=self.context['request'].user, link=link
-        )
+class EntrySubmissionSerializer(URLSubmissionSerializer):
+
+    def _has_submitted(self, url):
+        return self.context['request'].user.entry_set.filter(
+            link__url=url
+        ).exists()
 
 
 class UserFeedSubmissionSerializer(URLSubmissionSerializer):
 
-    def validate(self, data):
-        user = self.context['request'].user
-        if user.userfeed_set.filter(feed__url=data['url']).exists():
-            raise serializers.ValidationError('User is already subscribed to feed')
-
-        return data
-
-    def create(self, validated_data):
-        feed, created = models.Feed.objects.get_or_create(
-            url=validated_data['url']
-        )
-
-        if created: tasks.sync_feed.delay(feed.pk)
-
-        return models.UserFeed.objects.create(
-            feed=feed, user=self.context['request'].user
-        )
+    def _has_submitted(self, url):
+        return self.context['request'].user.userfeed_set.filter(feed__url=url).exists()

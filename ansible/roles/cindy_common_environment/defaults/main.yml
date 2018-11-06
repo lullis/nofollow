@@ -5,6 +5,7 @@ cindy_app_username: cindy
 cindy_app_email_backend: django.core.mail.backends.smtp.EmailBackend
 cindy_app_emailer_address: noreply@cindy.example.com
 cindy_app_development_mode: false
-cindy_broker_url: amqp://localhost
+cindy_broker_host: localhost
+cindy_broker_port: 5672
 cindy_broker_use_ssl: false
 cindy_database_username: cindy
