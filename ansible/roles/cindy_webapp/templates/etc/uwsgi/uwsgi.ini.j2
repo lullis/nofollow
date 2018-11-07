@@ -14,6 +14,9 @@ mount = /={{ cindy_webapp_installed_path_result.stdout }}/wsgi.py
 manage-script-name = true
 
 vaccum = true
+{% if uwsgi_systemd_die_on_term %}
+die-on-term = true
+{% endif %}
 
 env = CINDY_DATABASE_ENGINE=django.db.backends.postgresql
 env = CINDY_DATABASE_HOST={{ cindy_database_host | default('localhost') }}

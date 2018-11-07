@@ -4,3 +4,4 @@ cindy_webapp_uwsgi_port: 3031
 cindy_webapp_uwsgi_total_master_nodes: 1
 cindy_webapp_uwsgi_total_worker_processes: 4
 cindy_webapp_service_name: cindy_web_application
+uwsgi_systemd_die_on_term: false
