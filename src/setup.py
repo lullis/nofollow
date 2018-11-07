@@ -7,6 +7,7 @@ setup(
     url='https://bitbucket.org/lullis/cindy',
     version='0.0.1',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'boto3',
         'celery',
@@ -30,7 +31,14 @@ setup(
     ],
     zip_safe=False,
     classifiers=[
-        'Operating System :: Linux'
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Operating System :: Linux',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Internet :: WWW/HTTP',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
     keywords='crawling bookmark-manager readability feed-reader'
 )

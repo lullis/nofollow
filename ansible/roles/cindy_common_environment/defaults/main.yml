@@ -6,6 +6,8 @@ cindy_app_username: cindy
 cindy_app_email_backend: django.core.mail.backends.smtp.EmailBackend
 cindy_app_emailer_address: noreply@cindy.example.com
 cindy_app_development_mode: false
+cindy_app_static_url: /static/
+cindy_app_root_url: /
 cindy_broker_user_name: cindy
 cindy_broker_host: localhost
 cindy_broker_port: 5672

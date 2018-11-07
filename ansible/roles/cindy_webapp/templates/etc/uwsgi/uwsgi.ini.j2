@@ -7,7 +7,7 @@ uid={{ cindy_app_username }}
 gid=www-data
 protocol = uwsgi
 
-socket = {{ cindy_webapp_uwsgi_host }}:{{ cindy_webapp_uwsgi_port }}
+socket = {{ cindy_webapp_uwsgi_host }}:{{ cindy_webapp_uwsgi_port|default(3031) }}
 
 chdir = %(base)
 mount = /={{ cindy_webapp_installed_path_result.stdout }}/wsgi.py
@@ -33,7 +33,7 @@ env = CINDY_EMAIL_HOST={{ cindy_app_smtp_host|default('localhost') }}
 env = CINDY_EMAIL_PORT={{ cindy_app_smtp_port|default(465) }}
 env = CINDY_EMAIL_SMTP_USERNAME={{ cindy_app_smtp_username|default() }}
 env = CINDY_EMAIL_SMTP_PASSWORD={{ cindy_app_smtp_password|default() }}
-env = UWSGI_SOCKET={{ cindy_webapp_uwsgi_host }}:{{ cindy_webapp_uwsgi_port }}
+env = UWSGI_SOCKET={{ cindy_webapp_uwsgi_host }}:{{ cindy_webapp_uwsgi_port|default(3031) }}
 env = UWSGI_MASTER={{ cindy_webapp_uwsgi_total_master_nodes }}
 env = UWSGI_WORKERS={{ cindy_webapp_uwsgi_total_worker_processes|default(ansible_processor_count) }}
 env = CINDY_SECRET_KEY={{ cindy_app_secret_key }}

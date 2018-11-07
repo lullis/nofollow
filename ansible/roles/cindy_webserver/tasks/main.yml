@@ -1,0 +1,80 @@
+---
+- name: create DH Parameter file
+  tags: nginx, web, security
+  become: true
+  command: "openssl dhparam -out {{ ssl_dhparam_file_location }} {{ ssl_dhparam_key_size }}"
+  args:
+    creates: "{{ ssl_dhparam_file_location }}"
+
+- name: install ca-certificates
+  tags: ca
+  become: true
+  apt:
+    name: ca-certificates
+    state: present
+
+- name: install ssl parameters snippet file
+  tags: certbot, nginx
+  become: true
+  template:
+    src: etc/nginx/snippets/ssl_params.conf.j2
+    dest: "{{ nginx_snippet_ssl_params_path }}"
+
+- name: install certbot ssl certificates snippet file
+  tags: certbot, nginx
+  become: true
+  template:
+    src: etc/nginx/snippets/ssl_certificate_files.conf.j2
+    dest: "{{ nginx_snippet_ssl_certificates_path }}"
+
+- name: install CA certificate file
+  tags: certbot, ca
+  become: true
+  copy:
+    src: files/letsencrypt_ca.pem
+    dest: "{{ ca_certificate_path }}"
+    mode: 0644
+
+- name: create group for access of certificates
+  tags: certbot, unix, access
+  become: true
+  group:
+    name: "{{ certificate_store_access_group_name }}"
+    state: present    
+
+- name: give access for services to certificate store
+  tags: certbot, unix, access
+  become: true
+  file:
+    path: "{{ item }}"
+    group: "{{ certificate_store_access_group_name }}"
+    mode: u=rwX,g=rX,o=
+    recurse: true
+  with_items:
+    - "{{ certificate_store_dir }}"
+    - "{{ certificate_store_live_dir }}"
+
+- name: install site configuration file
+  tags: nginx, web, site
+  become: true
+  vars:
+    application_servers: "{{ groups['web_application_servers'] }}"
+  template:
+    src: etc/nginx/sites-available/cindy.j2
+    dest: "/etc/nginx/sites-available/{{ cindy_nginx_site_name }}"
+
+- name: enable nginx site
+  tags: nginx, web, site
+  become: true
+  file:
+    src: "/etc/nginx/sites-available/{{ cindy_nginx_site_name }}"
+    dest: "/etc/nginx/sites-enabled/{{ cindy_nginx_site_name }}"
+    state: link
+
+- name: enable nginx service
+  tags: nginx, web
+  become: true
+  systemd:
+    name: nginx
+    state: reloaded
+    enabled: true    

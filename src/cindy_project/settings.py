@@ -6,7 +6,7 @@ VIRTUALENV_DIR = os.environ.get('VIRTUAL_ENV')
 BIN_FOLDER = os.path.join(VIRTUALENV_DIR, 'bin')
 SECRET_KEY = os.getenv('CINDY_SECRET_KEY')
 
-DEBUG = 'CINDY_NODEBUG' not in os.environ
+DEBUG = 'CINDY_DEBUG' in os.environ
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -105,7 +105,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = os.getenv('CINDY_STATIC_URL', '/static/')
 STATIC_ROOT = os.getenv('CINDY_STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
 
 STATICFILES_FINDERS = (

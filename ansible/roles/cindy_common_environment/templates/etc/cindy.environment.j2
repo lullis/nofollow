@@ -37,5 +37,5 @@ DJANGO_SETTINGS_MODULE="cindy_project.settings"
 VIRTUAL_ENV={{ cindy_app_virtualenv_folder_path }}
 
 {% if cindy_app_development|default(false) %}
-CINDY_NODEBUG=1
+CINDY_DEBUG=1
 {% endif %}

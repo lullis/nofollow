@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: geerlingguy.nginx
+  - role: geerlingguy.certbot
+  - role: cindy_common_environment
+    skip_tasks: true

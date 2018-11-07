@@ -1,3 +1,7 @@
 ---
 cindy_worker_service_name: cindy_celery_worker
 cindy_worker_log_level: info
+
+rabbitmq_enabled: yes
+rabbitmq_plugins:
+  - rabbitmq_management
