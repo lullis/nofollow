@@ -6,7 +6,6 @@ from dateparser import parse
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-import requests
 import feedparser
 
 from . import models
@@ -36,7 +35,7 @@ def make_user_entry(user_id, url):
     link, created = models.Link.objects.get_or_create(url=url)
 
     if not link.is_processed:
-        process_link.delay(link.id)
+        process_link(link.id)
 
     return models.Entry.objects.create(
         user_id=user_id, link=link
@@ -46,15 +45,16 @@ def make_user_entry(user_id, url):
 def make_user_feed(user_id, url):
     feed, created = models.Feed.objects.get_or_create(url=url)
 
-    if created: sync_feed.delay(feed.pk)
+    if created: sync_feed(feed.pk)
 
     return models.UserFeed.objects.create(feed=feed, user_id=user_id)
 
 
+@shared_task
 def handle_url_submission(user_id, url):
-    response = requests.get(url)
+    response = models.Link.fetch(url)
     response.raise_for_status()
-    content_type = response.headers.get('content_type', '').split(';')[0]
+    content_type = response.headers.get('Content-Type', '').split(';')[0]
     action = {
         'text/html': make_user_entry,
         'text/xhtml': make_user_entry,

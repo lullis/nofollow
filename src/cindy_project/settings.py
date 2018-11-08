@@ -87,7 +87,7 @@ DATABASES = {
 MESSAGE_BROKER = {
     'URL': os.getenv('CINDY_BROKER_URL'),
     'USE_SSL': bool(int(os.getenv('CINDY_BROKER_USE_SSL', 0))),
-    'QUEUE_NAME': os.getenv('CINDY_BROKER_QUEUE_NAME', 'cindy')
+    'QUEUE_NAME': os.getenv('CINDY_BROKER_QUEUE_NAME', 'cindy_project')
 }
 
 
@@ -137,7 +137,7 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': tuple(REST_RENDERERS)
 }
 
-
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 

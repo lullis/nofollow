@@ -33,7 +33,7 @@ class Link(models.Model):
         return self.processed_on is not None
 
     def process(self):
-        response = requests.get(self.url, headers={'User-Agent': USER_AGENT})
+        response = self.__class__.fetch(self.url)
         try:
             response.raise_for_status()
             logger.info('Fetched {}'.format(self.url))
@@ -46,6 +46,10 @@ class Link(models.Model):
             self.save()
         except requests.HTTPError as exc:
             logger.exception(str(exc))
+
+    @classmethod
+    def fetch(cls, url):
+        return requests.get(url, headers={'User-Agent': USER_AGENT})
 
 
 class Feed(TimeStampedModel, AbstractFeedAuthorData):

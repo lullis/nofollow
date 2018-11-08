@@ -49,10 +49,10 @@ class SubmissionView(CreateAPIView):
     def post(self, request, **kw):
         serializer = self.get_serializer(data=self.request.data)
         if serializer.is_valid():
-            obj = tasks.handle_url_submission(
+            tasks.handle_url_submission.delay(
                 self.request.user.id, serializer.validated_data['url']
             )
-            return Response(obj, status=status.HTTP_201_CREATED, headers={
+            return Response(status=status.HTTP_201_CREATED, headers={
                 'Location': reverse('dashboard')
                 })
         else:

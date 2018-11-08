@@ -1,6 +1,14 @@
 {% extends "web/base.tmpl.html" %}
 {% load rest_framework %}
 {% block main_contents %}
+<h2>Submit URL</h2>
+<div class="row">
+  <p>
+    Submit any URL for a valid web page, and it will be saved in your
+    links to be read. Alternatively, you can submit URL for RSS feeds,
+    and we will create feeds with the processed content.
+  </p>
+</div>
 <div class="row">
   <form action="{% url 'submission' %}" method="POST">
     {% csrf_token %}
