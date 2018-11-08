@@ -13,6 +13,26 @@
     - cindy_app_pypi_url: file:///home/vagrant/code/src
     - cindy_broker_user_password: insecurepasswd_rabbitmq
 
+    - rabbitmq_enabled: yes
+    - rabbitmq_plugins:
+        - rabbitmq_management
+    - rabbitmq_users:
+        - user: admin
+          password: admin
+          vhost: /
+          configure_priv: .*
+          read_priv: .*
+          write_priv: .*
+          tags: administrator
+        - user: "{{ cindy_broker_user_name }}"
+          password: "{{ cindy_broker_user_password }}"
+          vhost: "{{ cindy_broker_vhost }}"
+          configure_priv: .*
+          read_priv: .*
+          write_priv: .*
+    - rabbitmq_vhosts: ["{{ cindy_broker_vhost }}"]
+
+
   roles:
     - role: stouts.rabbitmq
     - role: ANXS.postgresql
