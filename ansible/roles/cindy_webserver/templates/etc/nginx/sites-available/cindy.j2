@@ -22,7 +22,7 @@ server {
 	root {{ nginx_webroot_path }};
 
 	location {{ cindy_app_static_url }} {
-                alias   {{ cindy_app_static_root_path }};
+                alias {{ cindy_app_static_root_path }}/;
                 autoindex on;
                 expires max;
         }
