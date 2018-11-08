@@ -13,6 +13,6 @@ urlpatterns = [
         views.UserFeedSubmissionSerializer.as_view(),
         name='user-feed-list'
     ),
-    path('feed/<int:id>', views.FeedView(), name='feed'),
-    path('feed/<int:id>/processed', views.ProcessedFeedView(), name='processed-feed')
+    path('feed/<int:feed_id>', views.FeedView(), name='feed'),
+    path('feed/<int:feed_id>/processed', views.ProcessedFeedView(), name='processed-feed')
 ]

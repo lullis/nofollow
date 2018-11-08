@@ -1,15 +1,34 @@
 import logging
+import datetime
 
+from dateparser import parse
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
+import feedparser
 from readability import Document
 import requests
 from taggit.managers import TaggableManager
 
 USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0'
+EPOCH = datetime.datetime.fromtimestamp(0)
+
 logger = logging.getLogger(__name__)
+
+
+def parsed_datetime(timestamp):
+    return parse(timestamp, settings={'TO_TIMEZONE': settings.TIME_ZONE})
+
+
+def first_of(entry, *attrs):
+    for attr in attrs:
+        try:
+            return entry[attr]
+        except KeyError:
+            pass
+
+    return None
 
 
 class AbstractFeedAuthorData(models.Model):
@@ -72,6 +91,49 @@ class Feed(TimeStampedModel, AbstractFeedAuthorData):
             return self.url
 
         return '{} ({})'.format(self.title, self.url)
+
+    def fetch(self):
+        result = feedparser.parse(self.url)
+        last_checked_time_tuple = (self.last_checked or EPOCH).timetuple()
+        for entry in result.entries:
+            if entry.get('updated_parsed') > last_checked_time_tuple:
+                link, _ = Link.objects.get_or_create(url=entry.link, defaults={
+                    'title': entry.title
+                })
+
+                author_detail = entry.get('author_detail', {})
+                feed_link, _ = FeedLink.objects.get_or_create(link=link, feed=self, defaults={
+                        'summary': entry.summary,
+                        'content': entry.content[0].value,
+                        'published_on': parsed_datetime(entry.published),
+                        'updated_on': parsed_datetime(entry.updated),
+                        'author_name': author_detail.get('name'),
+                        'author_link': author_detail.get('link'),
+                        'author_email': author_detail.get('email'),
+                        'guid': first_of(entry, 'id', 'post-id'),
+                        'copyright': entry.get('copyright')
+                        })
+            else:
+                logger.info('Skipping entry {}. (updated before last run)'.format(
+                    entry.id
+                ))
+
+    @classmethod
+    def register(cls, url):
+        logger.info('Checking if {} is a registered feed'.format(url))
+        feed = cls.objects.filter(url=url).first()
+        if not feed:
+            logger.info('{} is not a registered feed'.format(url))
+            result = feedparser.parse(url)
+            feed = cls.objects.create(
+                url=url,
+                title=result.feed.title,
+                subtitle=result.feed.subtitle,
+                language=result.feed.language,
+                etag=result.etag,
+                last_modified=parsed_datetime(result.updated)
+            )
+        return feed
 
 
 class FeedLink(TimeStampedModel, AbstractFeedAuthorData):

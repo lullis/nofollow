@@ -20,6 +20,7 @@
       <nav role="navigation">
         <div class="container">
           <a class="brand-logo" href="{% url 'home' %}">{{ request.site.name }}</a>
+          {% include "web/navigation.tmpl.html" %}
         </div>
       </nav>
     </header>
@@ -31,6 +32,23 @@
       </div>
     </main>
     {% endblock %} <!-- Main Container -->
+
+    {% block fixed_action_button %}
+    {% if user.is_authenticated %}
+    <div class="fixed-action-btn">
+      <a href="{% url 'submission' %}" class="btn-floating btn-large">
+        <i class="large material-icons">add</i>
+      </a>
+    </div>
+    {% endif %}
+    {% endblock %}
+
     {% block footer %}{% endblock %}
+
+    <script>
+     $(document).ready(function(){
+       $('.sidenav').sidenav();
+     });
+    </script>
   </body>
 </html>

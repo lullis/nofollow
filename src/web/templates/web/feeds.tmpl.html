@@ -1,0 +1,17 @@
+{% extends "web/base.tmpl.html" %}
+{% block main_contents %}
+<h2>My Feeds</h2>
+<ul class="collection">
+  {% for userfeed in object_list %}
+  <li class="collection-item avatar">
+    <span class="title">{{ userfeed.feed.title }}</span>
+    <p>Last checked on: {{ userfeed.feed.last_checked|date }}</p>
+    <a href="{% url 'processed-feed' userfeed.feed.id %}" class="secondary-content">
+      <i class="material-icons">rss_feed</i>
+    </a>
+  </li>
+  {% empty %}
+  <li class="empty">No feed registered</li>
+  {% endfor %}
+</ul>
+{% endblock %}

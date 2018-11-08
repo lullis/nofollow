@@ -1,11 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
 from django.views.generic import RedirectView, DetailView
+from django.views.generic.list import ListView
+from django.shortcuts import redirect
 from rest_framework.generics import CreateAPIView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.reverse import reverse
 
 from cindy.models import Link
 from cindy.serializers import URLSubmissionSerializer
@@ -17,24 +19,25 @@ class HomeView(RedirectView):
 
     def get_redirect_url(self):
         is_logged = self.request.user.is_authenticated
-        return reverse('dashboard' if is_logged else 'login')
+        return reverse(
+            'dashboard' if is_logged else 'login', request=self.request
+        )
 
 
-class DashboardView(LoginRequiredMixin, DetailView):
-    PAGE_SIZE = 20
-    template_name = 'web/dashboard.tmpl.html'
+class LinkListView(LoginRequiredMixin, ListView):
+    template_name = 'web/links.tmpl.html'
+    paginate_by = 100
 
-    def get_object(self, *args, **kw):
-        return self.request.user
+    def get_queryset(self, *args, **kw):
+        return self.request.user.entry_set.order_by('-created')
 
-    def get_context_data(self, *args, **kw):
-        context = super().get_context_data(*args, **kw)
-        user = self.get_object()
-        context.update({
-            'links': user.entry_set.order_by('-created')[:self.PAGE_SIZE],
-            'feeds': user.userfeed_set.order_by('-created')[:self.PAGE_SIZE]
-            })
-        return context
+
+class FeedListView(LoginRequiredMixin, ListView):
+    template_name = 'web/feeds.tmpl.html'
+    paginate_by = 100
+
+    def get_queryset(self, *args, **kw):
+        return self.request.user.userfeed_set.order_by('-created')
 
 
 class SubmissionView(CreateAPIView):
@@ -52,9 +55,7 @@ class SubmissionView(CreateAPIView):
             tasks.handle_url_submission.delay(
                 self.request.user.id, serializer.validated_data['url']
             )
-            return Response(status=status.HTTP_201_CREATED, headers={
-                'Location': reverse('dashboard')
-                })
+            return redirect(reverse('dashboard', request=self.request))
         else:
             return Response(
                 {'serializer': serializer}, status=status.HTTP_400_BAD_REQUEST

@@ -5,6 +5,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'web/styles/read.css' %}" />
   </head>
   <body>
-    {{ object.cleaned_html }}
+    {{ object.cleaned_html|safe }}
   </body>
 </html>
