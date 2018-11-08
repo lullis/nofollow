@@ -3,13 +3,15 @@
 <h2>My Links</h2>
 <div class="row">
   {% for entry in object_list %}
-  <div class="card small">
-    <div class="card-image">
-      <span class="card-title">{{ entry.link.title }}</span>
-    </div>
-    <div class="card-action">
-      <a href="{% url 'read-link' entry.id %}">Read</a>
-      <a href="{{ entry.link.url }}">View Original</a>
+  <div class="col m4">
+    <div class="card small">
+      <div class="card-image">
+        <span class="card-title">{{ entry.link.title }}</span>
+      </div>
+      <div class="card-action">
+        <a href="{% url 'read-link' entry.link.id %}">Read</a>
+        <a href="{{ entry.link.url }}">View Original</a>
+      </div>
     </div>
   </div>
   {% endfor %}
