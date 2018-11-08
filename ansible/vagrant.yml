@@ -4,7 +4,7 @@
   become: true
 
   vars:
-    - cindy_app_development_mode: true
+    - cindy_app_development: true
     - cindy_database_username: vagrant
     - cindy_database_password: insecurepasswd_database
     - cindy_app_email_backend: django.core.mail.backends.console.EmailBackend
@@ -37,7 +37,6 @@
     - role: stouts.rabbitmq
     - role: ANXS.postgresql
     - role: cindy_webapp
-    - role: cindy_worker
     - role: cindy_database
 
   pre_tasks:
