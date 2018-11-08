@@ -143,3 +143,61 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # Taggit configuration
 TAGGIT_CASE_INSENSITIVE = True
+
+
+# Logging Configuration
+LOG_FILE = os.getenv('CINDY_SITE_LOG_FILE')
+LOGGING = {
+    'version': 1,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s:%(module)s %(process)d %(lineno)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s:%(module)s %(lineno)d %(message)s'
+        }
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+            },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+            },
+        'file': {
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'filename': LOG_FILE,
+            'maxBytes': 16 * 1024 * 1024,
+            'backupCount': 3
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['null'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'django.db.backends:': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': False,
+            },
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': False,
+        }
+    }
+}
+
+for app in APPS:
+    LOGGING['loggers'][app] = {
+        'handlers': ['console', 'file'],
+        'level': 'DEBUG' if DEBUG else 'INFO',
+        'propagate': False
+        }
