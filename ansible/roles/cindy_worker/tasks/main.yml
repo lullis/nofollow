@@ -12,5 +12,5 @@
   systemd:
     name: "{{ cindy_worker_service_name }}"
     enabled: true
-    state: started
+    state: restarted
     daemon_reload: true

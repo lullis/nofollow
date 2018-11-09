@@ -1,5 +1,6 @@
 import os
 
+from celery.schedules import crontab
 
 BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 VIRTUALENV_DIR = os.environ.get('VIRTUAL_ENV')
@@ -34,6 +35,7 @@ LIBRARY_APPS = [
 ]
 
 APPS = [
+    'boris',
     'cindy',
     'web'
     ]
@@ -92,6 +94,7 @@ MESSAGE_BROKER = {
 }
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
@@ -101,6 +104,12 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+
+
+# Media files (user generated content)
+MEDIA_ROOT = os.getenv('CINDY_MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
+MEDIA_URL = os.getenv('CINDY_MEDIA_URL', '/media/')
 
 
 # Static files (CSS, JavaScript, Images)
@@ -118,9 +127,6 @@ STATICFILES_FINDERS = (
 COMPRESS_PRECOMPILERS = (
     ('text/x-sass', '{} {{infile}} {{outfile}}'.format(os.path.join(BIN_FOLDER, 'sassc'))),
 )
-
-# Media files (user generated content)
-MEDIA_ROOT = os.getenv('CINDY_MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 
 
 # REST API Configuration
@@ -145,6 +151,19 @@ LOGOUT_REDIRECT_URL = 'home'
 # Taggit configuration
 TAGGIT_CASE_INSENSITIVE = True
 
+
+HTML_SANITIZERS = {
+    'default': {
+        'tags': {
+            'a', 'h1', 'h2', 'h3', 'strong', 'em', 'p', 'ul', 'ol',
+            'li', 'br', 'sub', 'sup', 'hr', 'quote', 'blockquote', 'img'
+        },
+        'attributes': {
+            'a': ('href', 'name', 'target', 'title', 'id', 'rel'),
+            'img': ('src', 'alt')
+        }
+    }
+}
 
 # Logging Configuration
 LOG_FILE = os.getenv('CINDY_SITE_LOG_FILE')

@@ -1,8 +1,6 @@
 from django.contrib.syndication.views import Feed as BaseFeedView
 from django.utils.feedgenerator import Atom1Feed
-from rest_framework.generics import CreateAPIView
 
-from . import serializers
 from . import models
 
 
@@ -30,12 +28,10 @@ class FeedView(BaseFeedView):
         return [c.name for c in obj.categories.all()]
 
     def items(self, obj):
-        return obj.feedlink_set.select_related(
-            'link'
-            ).order_by('-updated_on')
+        return obj.feedlink_set.select_related('link').order_by('-updated_on')
 
     def item_title(self, item):
-        return item.link.title
+        return item.title
 
     def item_description(self, item):
         return item.content
@@ -68,15 +64,26 @@ class FeedView(BaseFeedView):
         return item.copyright
 
 
-class ProcessedFeedView(FeedView):
+class UserFeedView(FeedView):
+
+    def get_object(self, request, userfeed_id):
+        return models.UserFeed.objects.get(id=userfeed_id)
+
+    def title(self, obj):
+        return obj.feed.title
+
+    def link(self, obj):
+        return obj.feed.url
+
+    def description(self, obj):
+        return obj.feed.description
+
+    def categories(self, obj):
+        return super().categories(obj.feed)
+
+    def items(self, obj):
+        return super().items(obj.feed)
 
     def item_description(self, item):
-        return item.link.cleaned_html
-
-
-class EntrySubmissionView(CreateAPIView):
-    serializer_class = serializers.EntrySubmissionSerializer
-
-
-class UserFeedSubmissionSerializer(CreateAPIView):
-    serializer_class = serializers.UserFeedSubmissionSerializer
+        extraction = item.link.best_extraction
+        return extraction and extraction.extracted_content

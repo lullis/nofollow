@@ -27,6 +27,12 @@ server {
                 expires max;
         }
 
+        location {{ cindy_app_media_url }} {
+                alias {{ cindy_app_media_root_path }}/;
+                autoindex on;
+                expires max;
+        }
+
         location {{ cindy_app_root_url }} {
                 include uwsgi_params;
                 uwsgi_pass webapp;

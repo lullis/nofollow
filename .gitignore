@@ -9,6 +9,8 @@ syntax: glob
 /config
 /log
 /data
+/media
+celerybeat-schedule
 .vagrant
 .vagrant.d/
 .DS_Store

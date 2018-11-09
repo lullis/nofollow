@@ -5,9 +5,12 @@
 <ul class="collection">
   {% for userfeed in object_list %}
   <li class="collection-item avatar">
+    {% if userfeed.feed.site.favicon %}
+    <img class="circle" src="{{ userfeed.feed.site.favicon.url }}" />
+    {% endif %}
     <span class="title">{{ userfeed.feed.title }}</span>
     <p>Last checked: {{ userfeed.feed.last_checked|naturaltime }}</p>
-    <a href="{% url 'processed-feed' userfeed.feed.id %}" class="secondary-content">
+    <a href="{% url 'user-feed' userfeed.id %}" class="secondary-content">
       <i class="material-icons">rss_feed</i>
     </a>
   </li>

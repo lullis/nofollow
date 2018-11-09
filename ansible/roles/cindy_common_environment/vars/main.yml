@@ -1,6 +1,7 @@
 ---
 cindy_app_user_home_folder_path: "/home/{{ cindy_app_username }}"
 cindy_app_static_root_path: "{{ cindy_app_user_home_folder_path }}/static"
+cindy_app_media_root_path: "{{ cindy_app_user_home_folder_path }}/media"
 cindy_app_log_folder_path: "{{ cindy_app_user_home_folder_path }}/logs"
 cindy_app_log_path: "{{ cindy_app_log_folder_path }}/app.log"
 cindy_app_virtualenvs_container_folder_path: "{{ cindy_app_user_home_folder_path }}/.virtualenvs"

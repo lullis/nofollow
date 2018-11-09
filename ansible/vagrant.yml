@@ -36,8 +36,8 @@
   roles:
     - role: stouts.rabbitmq
     - role: ANXS.postgresql
-    - role: cindy_webapp
     - role: cindy_database
+    - role: cindy_webapp
 
   pre_tasks:
   - include: setup.yml

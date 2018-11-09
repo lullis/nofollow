@@ -9,9 +9,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from cindy.models import Link
-from cindy.serializers import URLSubmissionSerializer
-from cindy import tasks
+from boris.models import Link
+from boris.serializers import LinkSerializer
+
+from . import tasks
 
 
 class HomeView(RedirectView):
@@ -29,7 +30,7 @@ class LinkListView(LoginRequiredMixin, ListView):
     paginate_by = 100
 
     def get_queryset(self, *args, **kw):
-        return self.request.user.entry_set.order_by('-created')
+        return self.request.user.userlink_set.order_by('-created')
 
 
 class FeedListView(LoginRequiredMixin, ListView):
@@ -42,7 +43,7 @@ class FeedListView(LoginRequiredMixin, ListView):
 
 class SubmissionView(CreateAPIView):
     renderer_classes = (TemplateHTMLRenderer,)
-    serializer_class = URLSubmissionSerializer
+    serializer_class = LinkSerializer
     template_name = 'web/submit.tmpl.html'
 
     def get(self, request, **kw):
@@ -67,6 +68,4 @@ class LinkView(DetailView):
     model = Link
 
     def get_object(self, *args, **kw):
-        return get_object_or_404(
-            Link, pk=self.kwargs['id'], processed_on__isnull=False
-        )
+        return get_object_or_404(Link, pk=self.kwargs['id'])

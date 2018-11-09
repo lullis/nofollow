@@ -1,4 +1,5 @@
 ---
 dependencies:
   - role: ANXS.postgresql
+    skip_tasks: true
   - role: cindy_common_environment

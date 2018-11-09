@@ -9,19 +9,16 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'boto3',
         'celery',
         'dateparser',
         'django>=2.0',
-        'django-allauth',
         'django_compressor',
         'django-model-utils',
         'djangorestframework',
-        'django-rest-auth',
-        'django_smtp_ssl',
         'django-material',
         'django-taggit',
         'feedparser',
+        'html-sanitizer',
         'libsass',
         'pillow',
         'psycopg2-binary',
@@ -38,7 +35,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content'
     ],
     keywords='crawling bookmark-manager readability feed-reader'
 )

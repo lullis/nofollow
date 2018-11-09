@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-{% load static %}
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'web/styles/read.css' %}" />
-  </head>
-  <body>
-    {{ object.cleaned_html|safe }}
-  </body>
-</html>
+{% extends "web/base.tmpl.html" %}
+{% block main_contents %}
+{% if object.best_extraction %}
+<h1>{{ object.best_extraction.title }}</h1>
+<article class="extraction">
+  {{ object.best_extraction.extracted_content|safe }}
+</article>
+  {% else %}
+  No text extracted. Read original at {{ object.url|urlize }}.
+{% endif %}
+{% endblock %}
