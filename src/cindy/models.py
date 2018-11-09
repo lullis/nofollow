@@ -102,9 +102,14 @@ class Feed(TimeStampedModel, AbstractFeedAuthorData):
                 })
 
                 author_detail = entry.get('author_detail', {})
+                try:
+                    content = entry.content[0].value
+                except (AttributeError, IndexError):
+                    content = None
+
                 feed_link, _ = FeedLink.objects.get_or_create(link=link, feed=self, defaults={
                         'summary': entry.summary,
-                        'content': entry.content[0].value,
+                        'content': content,
                         'published_on': parsed_datetime(entry.published),
                         'updated_on': parsed_datetime(entry.updated),
                         'author_name': author_detail.get('name'),
@@ -117,6 +122,8 @@ class Feed(TimeStampedModel, AbstractFeedAuthorData):
                 logger.info('Skipping entry {}. (updated before last run)'.format(
                     entry.id
                 ))
+        self.last_checked = timezone.now()
+        self.save()
 
     @classmethod
     def register(cls, url):

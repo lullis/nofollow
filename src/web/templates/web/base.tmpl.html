@@ -20,9 +20,15 @@
       <nav role="navigation">
         <div class="container">
           <a class="brand-logo" href="{% url 'home' %}">{{ request.site.name }}</a>
-          {% include "web/navigation.tmpl.html" %}
+          <a href="#" data-target="mobile-sidebar" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            {% include "web/navigation.tmpl.html" %}
+          </ul>
         </div>
       </nav>
+      <ul class="sidenav" id="mobile-sidebar">
+        {% include "web/navigation.tmpl.html" %}
+      </ul>
     </header>
     {% endblock %}
     {% block main %}
