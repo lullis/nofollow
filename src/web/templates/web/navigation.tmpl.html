@@ -1,8 +1,7 @@
-
-  {% if user.is_authenticated %}
-  <li><a href="{% url 'link-list' %}">My Links</a></li>
-  <li><a href="{% url 'feed-list' %}">My Feeds</a></li>  
-  <li><a href="{% url 'logout' %}">Logout</a></li>
-  {% else %}
-  <li><a href="{% url 'login' %}">Login</a></li>
-  {% endif %}
+{% if user.is_authenticated %}
+<li><a href="{% url 'link-list' %}">My Links</a></li>
+<li><a href="{% url 'feed-list' %}">My Feeds</a></li>  
+<li><a href="{% url 'logout' %}">Logout</a></li>
+{% else %}
+<li><a href="{% url 'login' %}">Login</a></li>
+{% endif %}
