@@ -12,7 +12,8 @@
     {% include "material/includes/material_js.html" %}
     <script src="{% static 'web/scripts/csrf.js' %}"></script>
     {% endcompress %}
-    <title>Cindy: Syndication and Link Cleaner</title>
+    
+    <title>{% block title %}Cindy: Syndication and Link Cleaner{% endblock %}</title>
   </head>
   <body class="{% block body_container_style %}{% endblock %}">
     {% block header %}

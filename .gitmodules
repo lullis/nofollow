@@ -1,0 +1,9 @@
+[submodule "submodules/django_boris"]
+	path = submodules/django_boris
+	url = ssh://git@bitbucket.org/lullis/django_boris.git
+[submodule "submodules/django_cindy"]
+	path = submodules/django_cindy
+	url = ssh://git@bitbucket.org/lullis/django_cindy.git
+[submodule "submodules/django_kip"]
+	path = submodules/django_kip
+	url = ssh://git@bitbucket.org/lullis/django_kip.git

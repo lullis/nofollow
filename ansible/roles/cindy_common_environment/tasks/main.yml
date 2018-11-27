@@ -1,8 +1,0 @@
----
-- name: copy service environment variables
-  tags: cindy, systemd, environment
-  become: true
-  template:
-    src: templates/etc/cindy.environment.j2
-    dest: "{{ cindy_app_service_environment_file_path }}"
-    

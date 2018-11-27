@@ -1,0 +1,16 @@
+---
+rabbitmq_users:
+  - user: admin
+    password: admin
+    vhost: /
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    tags: administrator
+  - user: "{{ broker_user_name }}"
+    password: "{{ broker_user_password }}"
+    vhost: "{{ broker_vhost }}"
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+  - rabbitmq_vhosts: ["{{ broker_vhost }}"]

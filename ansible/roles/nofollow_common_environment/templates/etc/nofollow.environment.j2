@@ -1,0 +1,42 @@
+# DATABASE
+NOFOLLOW_DATABASE_ENGINE="django.db.backends.postgresql"
+NOFOLLOW_DATABASE_HOST="{{ database_host | default('localhost') }}"
+NOFOLLOW_DATABASE_NAME="{{ database_name }}"
+NOFOLLOW_DATABASE_USER="{{ database_username }}"
+NOFOLLOW_DATABASE_PASSWORD="{{ database_password }}"
+
+# MESSAGE_BROKER
+NOFOLLOW_BROKER_URL="{{ broker_url }}"
+NOFOLLOW_BROKER_USE_SSL="{{ 1 if broker_use_ssl else 0 }}"
+
+
+# Application file location
+NOFOLLOW_MEDIA_ROOT="{{ app_media_root_path }}"
+NOFOLLOW_STATIC_ROOT="{{ app_static_root_path }}"
+NOFOLLOW_SITE_LOG_FILE="{{ app_log_path }}"
+
+
+# Email
+NOFOLLOW_EMAIL_MAILER_ADDRESS="{{ app_emailer_address }}"
+NOFOLLOW_EMAIL_BACKEND="{{ app_email_backend }}"
+NOFOLLOW_EMAIL_HOST="{{ app_smtp_host|default('localhost') }}"
+NOFOLLOW_EMAIL_PORT="{{ app_smtp_port|default(465) }}"
+NOFOLLOW_EMAIL_SMTP_USERNAME="{{ app_smtp_username|default() }}"
+NOFOLLOW_EMAIL_SMTP_PASSWORD="{{ app_smtp_password|default() }}"
+
+
+# UWSGI
+UWSGI_SOCKET="{{ app_uwsgi_host|default('127.0.0.1') }}:{{ app_uwsgi_port|default(3031) }}"
+UWSGI_MASTER="{{ app_uwsgi_total_master_nodes|default(1) }}"
+UWSGI_WORKERS="{{ app_uwsgi_total_worker_processes|default(4) }}"
+
+
+# DJANGO WEB APP
+NOFOLLOW_SECRET_KEY="{{ app_secret_key }}"
+DJANGO_SETTINGS_MODULE="{{ application_name }}.settings"
+
+VIRTUAL_ENV={{ app_virtualenv_folder_path }}
+
+{% if app_development|default(false) %}
+NOFOLLOW_DEBUG=1
+{% endif %}

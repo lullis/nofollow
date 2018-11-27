@@ -1,0 +1,18 @@
+[Unit]
+Description=Nofollow Celery Worker
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_username }}
+Group={{ app_username }}
+EnvironmentFile={{ app_service_environment_file_path }}
+WorkingDirectory={{ app_user_home_folder_path }}
+ExecStart={{ app_virtualenv_folder_path }}/bin/celery worker -A {{ application_name }} -l {{ worker_log_level }} -B
+ExecStop={{ app_virtualenv_folder_path }}/bin/celery control shutdown
+ExecReload={{ app_virtualenv_folder_path }}/bin/celery multi restart celery
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

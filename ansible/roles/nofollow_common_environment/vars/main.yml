@@ -1,0 +1,9 @@
+---
+app_user_home_folder_path: "/home/{{ app_username }}"
+app_static_root_path: "{{ app_user_home_folder_path }}/static"
+app_media_root_path: "{{ app_user_home_folder_path }}/media"
+app_log_folder_path: "{{ app_user_home_folder_path }}/logs"
+app_log_path: "{{ app_log_folder_path }}/app.log"
+app_virtualenvs_container_folder_path: "{{ app_user_home_folder_path }}/.virtualenvs"
+app_virtualenv_folder_path: "{{ app_virtualenvs_container_folder_path }}/{{ app_virtualenv_name }}"
+broker_url: "amqp://{{ broker_user_name }}:{{ broker_user_password }}@{{ broker_host }}:{{ broker_port }}/{{ broker_vhost }}"

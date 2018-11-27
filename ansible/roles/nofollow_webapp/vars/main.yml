@@ -1,0 +1,2 @@
+---
+app_uwsgi_config_file_path: "{{ app_user_home_folder_path }}/uwsgi.ini"

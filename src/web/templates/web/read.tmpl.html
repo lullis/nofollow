@@ -1,4 +1,5 @@
 {% extends "web/base.tmpl.html" %}
+{% block title %}{{ object.best_extraction.title }}{% endblock %}
 {% block main_contents %}
 {% if object.best_extraction %}
 <h1>{{ object.best_extraction.title }}</h1>

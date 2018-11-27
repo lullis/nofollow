@@ -4,15 +4,27 @@
   become: true
 
   vars:
-    - cindy_app_development: true
-    - cindy_database_username: vagrant
-    - cindy_database_password: insecurepasswd_database
-    - cindy_app_email_backend: django.core.mail.backends.console.EmailBackend
-    - cindy_app_secret_key: this_is_an_insecure_secret_key
-    - cindy_app_username: vagrant
-    - cindy_app_pypi_url: file:///home/vagrant/code/src
-    - cindy_broker_user_password: insecurepasswd_rabbitmq
+    - app_development: true
+    - database_username: vagrant
+    - database_password: insecurepasswd_database
+    - app_email_backend: django.core.mail.backends.console.EmailBackend
+    - app_secret_key: this_is_an_insecure_secret_key
+    - app_username: vagrant
+    - app_pypi_url: file:///home/vagrant/code/src
+    - broker_user_password: insecurepasswd_rabbitmq
 
+    # IPFS setup
+    - ipfs_version: v0.4.18
+    - ipfs_http_api_listen_multiaddress: /ip4/0.0.0.0/tcp/5001
+    - ipfs_http_gateway_listen_multiaddress: /ip4/0.0.0.0/tcp/8080
+    - ipfs_storage_max: 1GB
+
+    # Generated with ipfs-key, and a (very weak) 512 RSA key.
+    # Do NOT use these for a real deployment
+    - ipfs_peer_id: QmdDBjoUWjVT9Ugu1sbJnJ59ZBhbueRWmiVpD5RCGMxiMb
+    - ipfs_private_key: CAASvgIwggE6AgEAAkEAq6fH/mssYWcGIcgz4GVCyWodjQUKislypEQqcHbKTdUxWLncxq0NZ9EjPs06qC3G0/nWm1wnV3tUtAM17KCQgwIDAQABAkAm2yTvV21FYx/FN99eVS2oECg+SrzXK8CSpIeCy7EBqvjAu3iJcVGr12qAFhyhbDeOl+XrEGvA4/5Is3gESdHxAiEAzIdTZygT0FPsteAW4kHockAFzs7oi3ZCpiOzOhi2BasCIQDW2pyAi1wu492w+ONw/35qSjVazZFCOhjBHqXxcY6YiQIgElTmws4yyG9dPgfxxSHHJcZbPugIq8dTvfRhMgnY9rUCIHbUrFBwQ4jvoJKb5Xd+59Uzu/S/04JUjZJqOA+k5eA5AiEAjFymxQ+xclVEL9aNViP5t5eH1BnRhgO9zWivi9A+evY=
+
+    # RabbitMQ
     - rabbitmq_enabled: yes
     - rabbitmq_plugins:
         - rabbitmq_management
@@ -24,20 +36,21 @@
           read_priv: .*
           write_priv: .*
           tags: administrator
-        - user: "{{ cindy_broker_user_name }}"
-          password: "{{ cindy_broker_user_password }}"
-          vhost: "{{ cindy_broker_vhost }}"
+        - user: "{{ broker_user_name }}"
+          password: "{{ broker_user_password }}"
+          vhost: "{{ broker_vhost }}"
           configure_priv: .*
           read_priv: .*
           write_priv: .*
-    - rabbitmq_vhosts: ["{{ cindy_broker_vhost }}"]
+    - rabbitmq_vhosts: ["{{ broker_vhost }}"]
 
 
   roles:
+    - role: jeffbr13.ipfs    
     - role: stouts.rabbitmq
     - role: ANXS.postgresql
-    - role: cindy_database
-    - role: cindy_webapp
+    - role: nofollow_database
+    - role: nofollow_webapp
 
   pre_tasks:
   - include: setup.yml
@@ -47,5 +60,5 @@
       name: /home/vagrant/.bashrc
       line: "{{ item }}"
     with_items:
-      - "set -a && source {{ cindy_app_service_environment_file_path }} && set +a"
-      - "source /home/vagrant/.virtualenvs/{{ cindy_app_virtualenv_name }}/bin/activate"
+      - "set -a && source {{ app_service_environment_file_path }} && set +a"
+      - "source /home/vagrant/.virtualenvs/{{ app_virtualenv_name }}/bin/activate"

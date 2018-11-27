@@ -1,2 +1,0 @@
----
-cindy_webapp_uwsgi_config_file_path: "{{ cindy_app_user_home_folder_path }}/uwsgi.ini"

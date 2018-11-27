@@ -1,0 +1,51 @@
+- name: install uwsgi
+  tags: webapp, uwsgi
+  become: true
+  become_user: "{{ app_username }}"
+  pip:
+    name: uwsgi
+    virtualenv: "{{ app_virtualenv_folder_path }}"
+
+- name: register where the application was installed
+  tags: webapp, application
+  become: true
+  become_user: "{{ app_username }}"
+  shell: "set -a && . {{ app_service_environment_file_path }} && {{ app_virtualenv_folder_path }}/bin/python -c 'import {{ application_name }}; print({{ application_name }}.__path__[0])'"
+  register: app_installed_path_result
+
+- name: install uwsgi configuration file
+  tags: webapp, uwsgi
+  become: true
+  template:
+    src: etc/uwsgi/uwsgi.ini.j2
+    dest: "{{ app_uwsgi_config_file_path }}"
+    owner: "{{ app_username }}"
+    group: "{{ app_username }}"
+
+- name: collect static files
+  tags: webapp, staticfiles
+  become: true
+  become_user: "{{ app_username }}"
+  shell: "set -a && . {{ app_service_environment_file_path }} && {{ app_virtualenv_folder_path }}/bin/django-admin collectstatic --noinput"
+
+- name: run migrations
+  tags: webapp, staticfiles
+  become: true
+  become_user: "{{ app_username }}"
+  shell: "set -a && . {{ app_service_environment_file_path }} && {{ app_virtualenv_folder_path }}/bin/django-admin migrate"
+
+- name: install systemd service configuration
+  tags: webapp, systemd
+  become: true
+  template:
+    src: etc/systemd/system/service.j2
+    dest: "/etc/systemd/system/{{ app_service_name }}.service"
+
+- name: enable service
+  tags: webapp, systemd
+  become: true
+  systemd:
+    name: "{{ app_service_name }}"
+    enabled: true
+    state: restarted
+    daemon_reload: true

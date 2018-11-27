@@ -1,0 +1,41 @@
+[uwsgi]
+base = {{ app_user_home_folder_path }}
+home = {{ app_virtualenv_folder_path }}
+master = true
+processes = {{ ansible_processor_count }}
+uid={{ app_username }}
+gid=www-data
+protocol = uwsgi
+
+socket = {{ app_uwsgi_host }}:{{ app_uwsgi_port|default(3031) }}
+
+chdir = %(base)
+mount = /={{ app_installed_path_result.stdout }}/wsgi.py
+manage-script-name = true
+
+vaccum = true
+{% if uwsgi_systemd_die_on_term %}
+die-on-term = true
+{% endif %}
+
+env = NOFOLLOW_DATABASE_ENGINE=django.db.backends.postgresql
+env = NOFOLLOW_DATABASE_HOST={{ database_host | default('localhost') }}
+env = NOFOLLOW_DATABASE_NAME={{ database_name }}
+env = NOFOLLOW_DATABASE_USER={{ database_username }}
+env = NOFOLLOW_DATABASE_PASSWORD={{ database_password }}
+env = NOFOLLOW_BROKER_URL={{ broker_url }}
+env = NOFOLLOW_BROKER_USE_SSL={{ 1 if broker_use_ssl else 0 }}
+env = NOFOLLOW_STATIC_ROOT={{ app_static_root_path }}
+env = NOFOLLOW_SITE_LOG_FILE={{ app_log_path }}
+env = NOFOLLOW_EMAIL_MAILER_ADDRESS={{ app_emailer_address }}
+env = NOFOLLOW_EMAIL_BACKEND={{ app_email_backend }}
+env = NOFOLLOW_EMAIL_HOST={{ app_smtp_host|default('localhost') }}
+env = NOFOLLOW_EMAIL_PORT={{ app_smtp_port|default(465) }}
+env = NOFOLLOW_EMAIL_SMTP_USERNAME={{ app_smtp_username|default() }}
+env = NOFOLLOW_EMAIL_SMTP_PASSWORD={{ app_smtp_password|default() }}
+env = UWSGI_SOCKET={{ app_uwsgi_host }}:{{ app_uwsgi_port|default(3031) }}
+env = UWSGI_MASTER={{ app_uwsgi_total_master_nodes }}
+env = UWSGI_WORKERS={{ app_uwsgi_total_worker_processes|default(ansible_processor_count) }}
+env = NOFOLLOW_SECRET_KEY={{ app_secret_key }}
+env = DJANGO_SETTINGS_MODULE=nofollow.settings
+env = VIRTUAL_ENV={{ app_virtualenv_folder_path }}

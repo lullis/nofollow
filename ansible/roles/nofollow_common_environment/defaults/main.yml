@@ -1,0 +1,18 @@
+---
+application_name: nofollow
+app_service_environment_file_path: /etc/nofollow.environment
+app_virtualenv_name: nofollow
+app_username: nofollow
+app_email_backend: django.core.mail.backends.smtp.EmailBackend
+app_emailer_address: noreply@nofollow.example.com
+app_development_mode: false
+app_media_url: /media/
+app_static_url: /static/
+app_root_url: /
+broker_user_name: nofollow
+broker_host: localhost
+broker_port: 5672
+broker_vhost: nofollow
+broker_use_ssl: false
+database_name: nofollow
+database_username: nofollow

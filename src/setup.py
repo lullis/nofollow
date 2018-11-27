@@ -3,39 +3,34 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='cindy',
-    url='https://bitbucket.org/lullis/cindy',
+    name='nofollow',
+    url='https://bitbucket.org/lullis/nofollow',
     version='0.0.1',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
         'celery',
-        'dateparser',
         'django>=2.0',
+        'django-boris',
+        'django-cindy',
         'django_compressor',
+        'django-kip',
         'django-model-utils',
         'djangorestframework',
         'django-material',
-        'django-taggit',
-        'feedparser',
-        'html-sanitizer',
         'libsass',
-        'pillow',
-        'psycopg2-binary',
-        'readability-lxml',
-        'requests',
-        'uwsgi'
+        'psycopg2-binary'
     ],
     zip_safe=False,
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Operating System :: Linux',
+        'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content'
     ],
-    keywords='crawling bookmark-manager readability feed-reader'
+    keywords='bookmark-manager syndication html-extraction'
 )

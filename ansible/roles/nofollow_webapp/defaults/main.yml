@@ -1,0 +1,6 @@
+---
+app_uwsgi_host: 0.0.0.0
+app_uwsgi_total_master_nodes: 1
+app_uwsgi_total_worker_processes: 4
+app_service_name: nofollow_web
+uwsgi_systemd_die_on_term: false

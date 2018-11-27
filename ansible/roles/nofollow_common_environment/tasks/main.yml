@@ -1,0 +1,8 @@
+---
+- name: copy service environment variables
+  tags: nofollow, systemd, environment
+  become: true
+  template:
+    src: templates/etc/nofollow.environment.j2
+    dest: "{{ app_service_environment_file_path }}"
+    

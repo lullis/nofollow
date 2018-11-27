@@ -1,0 +1,3 @@
+---
+worker_service_name: nofollow_celery_worker
+worker_log_level: info

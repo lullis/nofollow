@@ -11,8 +11,7 @@ from rest_framework.reverse import reverse
 
 from boris.models import Link
 from boris.serializers import LinkSerializer
-
-from . import tasks
+from core.tasks import handle_url_submission
 
 
 class HomeView(RedirectView):
@@ -53,10 +52,15 @@ class SubmissionView(CreateAPIView):
     def post(self, request, **kw):
         serializer = self.get_serializer(data=self.request.data)
         if serializer.is_valid():
-            tasks.handle_url_submission.delay(
-                self.request.user.id, serializer.validated_data['url']
-            )
-            return redirect(reverse('dashboard', request=self.request))
+            submitted_url = serializer.validated_data['url']
+            user = self.request.user
+            if user.userlink_set.filter(link__url=submitted_url).exists():
+                return redirect(reverse('link-list', request=self.request))
+            elif user.userfeed_set.filter(feed__url=submitted_url).exists():
+                return redirect(reverse('feed-list', request=self.request))
+            else:
+                handle_url_submission.delay(user.id, submitted_url)
+                return redirect(reverse('dashboard', request=self.request))
         else:
             return Response(
                 {'serializer': serializer}, status=status.HTTP_400_BAD_REQUEST
