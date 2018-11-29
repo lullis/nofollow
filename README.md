@@ -72,22 +72,28 @@ update` and get these repos on the 'modules' folder.
 
 If everything goes well: you should be able to `vagrant ssh` to ssh
 into the box and get to bash with an already-activated virtualenv.
-`cd code/modules` and `pip install -e boris cindy kip` will install
+`cd code/submodules`, `git submodule update` and `pip install -e boris cindy kip` will install
 the dependency packages in editable mode.
 
 After that:
 
  - `django-admin migrate` to run the migrations
+ - `django-admin createsuperuser` to get an admin account (follow the instructions)
  - `django-admin runserver 0.0.0.0:8000` will get the application running
  - (On another shell) `celery worker -A nofollow -B -l info` will start celery tasks and periodic tasks.
+
+With everything running, you should be able to go to
+http://192.168.23.15:8000/ and be redirected to the admin login
+page. After logging in, you should be redirected to the home page, and
+add either links or feeds.
 
 ### Installation
 
 #### Warnings
 
- - *this section is certainly incomplete and assumes you are
+ - **this section is certainly incomplete and assumes you are
 experienced enough with deploying web services on the public
-internet, as well as with the risks of doing so.*
+internet, as well as with the risks of doing so.**
 
  - This procedure assumes Ubuntu as the target Operating System. You
    may have to change some of the package names or install methods for other distros/OSes
@@ -219,6 +225,7 @@ env = VIRTUAL_ENV=<path to your virtualenv>
 
 
 TODO:
+
  - systemd for web application
  - systemd for celery workers
 
