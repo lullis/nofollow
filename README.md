@@ -51,7 +51,6 @@ the terrible puns that led to their names
    also _keeps_ (wink, wink) the people-names-naming convention.
 
 
-
 ### Development
 
 You need to have any reasonable recent version of vagrant and
@@ -84,7 +83,144 @@ After that:
 
 ### Installation
 
-TODO
+#### Warnings
+
+ - *this section is certainly incomplete and assumes you are
+experienced enough with deploying web services on the public
+internet, as well as with the risks of doing so.*
+
+ - This procedure assumes Ubuntu as the target Operating System. You
+   may have to change some of the package names or install methods for other distros/OSes
+
+ - If you have some ansible experience, the roles used might be a
+   useful starting point for deploying on Ubuntu/Debian. PRs for expanding this are welcome.
+
+ - PRs to get this deployed via docker are also _very_ encouraged.
+
+ - This is assuming you are installing everything on the same
+machine. While not recommended for any serious production deployment,
+it should be okay for one single user. If you are looking for a more
+robust deployment, you probably are experienced enough to want to
+install things your own way. The only thing you will probably need to
+know are the required environment variables, discussed below.
+
+ - Please file bugs/get in touch for missing/wrong information.
+
+
+#### Installing needed systems and servers
+
+ - Postgresql: `sudo apt install postgresql-server libpq5-dev`
+ - Rabbitmq: `sudo apt install rabbitmq-server`
+ - [IPFS](https://docs.ipfs.io/introduction/install)
+ - nginx: `sudo apt install nginx`
+ - uwsgi: `sudo apt install uwsgi`
+
+
+#### Setting up the web application
+ 1. Install python3 with the development header packages: `sudo apt install python3 python3-dev`
+ 1. Install virtualenv and pip: `sudo apt install python3-pip virtualenv`
+ 1. Create a python3 virtualenv
+ 1. On the virtualenv, install `pip install git+https://bitbucket.org/lullis/nofollow.git`
+ 1. Find the template file on
+ `$REPO_ROOT/ansible/roles/templates/etc/nofollow.environment.j2` and
+ save it on the host machine. Substitute all of the parameters inside
+ double curly-brackets (`{{ }}`) with the proper parameters you'd like
+ to set. (Be careful to set up long, random strings for the passwords and secrets)
+ 1. `set -a && source <environment config file>`
+
+
+NGINX template file:
+
+[Please use HTTPS](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04)
+
+```
+upstream webapp {
+        server <your server name>:3031;
+    }
+
+server {
+	listen 80;
+	server_name <your server name>;
+        return 302 https://$host$request_uri;
+}
+
+
+server {
+
+	listen 443 ssl;
+	server_name <your server name>;
+
+        # configuration parameters for let's encrypt.
+        # Take a look [here](https://gist.github.com/nrollr/9a39bb636a820fb97eec2ed85e473d38)
+
+	root /var/www/html;
+
+	location /static/ {
+                alias <location of static folder (STATIC_ROOT), ending with slash>;
+                autoindex on;
+                expires max;
+        }
+
+        location /media/ {
+                alias <location of media folder (MEDIA_ROOT), ending with slash>;
+                autoindex on;
+                expires max;
+        }
+
+        location / {
+                include uwsgi_params;
+                uwsgi_pass webapp;
+
+                uwsgi_param Host $host;
+                uwsgi_param X-Real-IP $remote_addr;
+                uwsgi_param X-Forwarded-For $proxy_add_x_forwarded_for;
+                uwsgi_param X-Forwarded-Proto $http_x_forwarded_proto;
+        }
+
+}
+```
+
+
+UWSGI template file:
+```
+base = <base folder>
+home = <path to your virtualenv>
+master = true
+processes = 1
+uid=<user running the application>
+gid=www-data
+protocol = uwsgi
+
+socket = 0.0.0.0:3031
+
+chdir = %(base)
+mount = /=<path to your virtualenv>/lib/<python version>/site-packages/nofollow/wsgi.py
+manage-script-name = true
+
+vaccum = true
+die-on-term = true
+
+env = NOFOLLOW_DATABASE_ENGINE=django.db.backends.postgresql
+env = NOFOLLOW_DATABASE_HOST=localhost
+env = NOFOLLOW_DATABASE_NAME=<db_name>
+env = NOFOLLOW_DATABASE_USER=<db_user>
+env = NOFOLLOW_DATABASE_PASSWORD=<db password>
+env = NOFOLLOW_BROKER_URL=<rabbitmq_url>
+env = NOFOLLOW_BROKER_USE_SSL=0
+env = NOFOLLOW_STATIC_ROOT=<path to folder of static files>
+env = NOFOLLOW_SITE_LOG_FILE=<path to log file>
+env = UWSGI_SOCKET=0.0.0.0:3031
+env = UWSGI_MASTER=1
+env = UWSGI_WORKERS=4
+env = NOFOLLOW_SECRET_KEY=<your django secret key>
+env = DJANGO_SETTINGS_MODULE=nofollow.settings
+env = VIRTUAL_ENV=<path to your virtualenv>
+```
+
+
+TODO:
+ - systemd for web application
+ - systemd for celery workers
 
 
 ### Ideas/Things I would like to see implemented (in order of what I am inclined to work first):

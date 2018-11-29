@@ -33,7 +33,7 @@ UWSGI_WORKERS="{{ app_uwsgi_total_worker_processes|default(4) }}"
 
 # DJANGO WEB APP
 NOFOLLOW_SECRET_KEY="{{ app_secret_key }}"
-DJANGO_SETTINGS_MODULE="{{ application_name }}.settings"
+DJANGO_SETTINGS_MODULE="nofollow.settings"
 
 VIRTUAL_ENV={{ app_virtualenv_folder_path }}
 
