@@ -36,8 +36,10 @@ def handle_url_submission(user_id, url):
         action = {
             'text/html': make_user_link,
             'text/xhtml': make_user_link,
+            'text/xml': make_user_link,
             'application/rss+xml': make_user_feed,
-            'application/atom+xml': make_user_feed
+            'application/atom+xml': make_user_feed,
+            'application/xml': make_user_feed
             }.get(content_type)
 
         return action and action(user_id, url)
