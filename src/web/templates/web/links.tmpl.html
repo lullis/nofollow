@@ -2,17 +2,26 @@
 {% block main_contents %}
 <h2>My Links</h2>
 <div class="row">
-  {% for userlink in object_list %}
+  {% for item in object_list %}
   <div class="col m4 s12">
-    <div class="card small link">
+    <div class="card medium link">
+      <div class="card-image">
+        <a href="{% url 'read-link' item.link.id %}">
+          {% if item.lead_image %}
+          <img src="{{ item.lead_image.url }}" />
+          {% endif %}
+        </a>
+      </div>
       <div class="card-content">
-        <a href="{% url 'read-link' userlink.link.id %}">{{ userlink.link.title }}</a>
+        <a href="{% url 'read-link' item.link.id %}">
+          <span class="card-title">{{ item.title }}</span>
+        </a>
       </div>
       <div class="card-action valign-wrapper">
-        {% if userlink.link.site.favicon %}
-        <img class="site-favicon" src="{{ userlink.link.site.favicon.url }}" />
+        {% if item.link.site.favicon %}
+        <img class="site-favicon" src="{{ item.link.site.favicon.url }}" />
         {% endif %}
-        <a href="{{ userlink.link.url }}" target="_blank">View Original</a>
+        <a href="{{ item.link.url }}" target="_blank">View Original</a>
       </div>
     </div>
   </div>

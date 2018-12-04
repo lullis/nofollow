@@ -25,6 +25,10 @@ NOFOLLOW_EMAIL_SMTP_USERNAME="{{ app_smtp_username|default() }}"
 NOFOLLOW_EMAIL_SMTP_PASSWORD="{{ app_smtp_password|default() }}"
 
 
+# App integrations
+MERCURY_PARSER_API_KEY="{{ app_integrations_mercury_parser_api_key }}"
+
+
 # UWSGI
 UWSGI_SOCKET="{{ app_uwsgi_host|default('127.0.0.1') }}:{{ app_uwsgi_port|default(3031) }}"
 UWSGI_MASTER="{{ app_uwsgi_total_master_nodes|default(1) }}"

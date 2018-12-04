@@ -163,6 +163,16 @@ HTML_SANITIZERS = {
     }
 }
 
+
+# Boris Spider Configuration
+
+BORIS_SPIDERS = {
+    'MERCURY_PARSER': {
+        'API_KEY': os.getenv('MERCURY_PARSER_API_KEY')
+        }
+    }
+
+
 # Logging Configuration
 LOG_FILE = os.getenv('NOFOLLOW_SITE_LOG_FILE')
 LOGGING = {

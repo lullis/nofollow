@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from boris.models import Link
+from boris.models import Link, CrawledItem
 from boris.serializers import LinkSerializer
 from core.tasks import handle_url_submission
 
@@ -29,7 +29,14 @@ class LinkListView(LoginRequiredMixin, ListView):
     paginate_by = 100
 
     def get_queryset(self, *args, **kw):
-        return self.request.user.userlink_set.order_by('-created')
+        user_links = self.request.user.userlink_set.prefetch_related(
+            'link', 'link__crawleditem_set'
+        )
+
+        return CrawledItem.objects.filter(id__in=[
+            ul.link.crawleditem_set.order_by('-extraction_score').values_list(
+                'id', flat=True
+            ).first() for ul in user_links]).order_by('-link__userlink__created')
 
 
 class FeedListView(LoginRequiredMixin, ListView):
