@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
+import versioneer
 
 setup(
     name='nofollow',
     url='https://bitbucket.org/lullis/nofollow',
-    version='0.0.1',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
