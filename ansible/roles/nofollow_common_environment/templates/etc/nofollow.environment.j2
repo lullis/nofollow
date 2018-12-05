@@ -9,6 +9,9 @@ NOFOLLOW_DATABASE_PASSWORD="{{ database_password }}"
 NOFOLLOW_BROKER_URL="{{ broker_url }}"
 NOFOLLOW_BROKER_USE_SSL="{{ 1 if broker_use_ssl else 0 }}"
 
+# IPFS
+NOFOLLOW_IPFS_API_URL ="{{ app_ipfs_api_url|default('http://localhost:5001/api/v0') }}"
+NOFOLLOW_IPFS_GATEWAY_URL ="{{ app_ipfs_gateway_url|default('https://gateway.ipfs.io/ipfs') }}"
 
 # Application file location
 NOFOLLOW_MEDIA_ROOT="{{ app_media_root_path }}"

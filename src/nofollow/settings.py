@@ -93,6 +93,15 @@ MESSAGE_BROKER = {
 }
 
 
+# IPFS Storage
+IPFS_STORAGE_API_URL = os.getenv(
+    'NOFOLLOW_IPFS_API_URL', 'http://localhost:5001/api/v0'
+)
+IPFS_STORAGE_GATEWAY_URL = os.getenv(
+    'NOFOLLOW_IPFS_GATEWAY_URL', 'https://gateway.ipfs.io/ipfs'
+)
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
