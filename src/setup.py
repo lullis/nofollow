@@ -5,7 +5,7 @@ import versioneer
 
 setup(
     name='nofollow',
-    url='https://bitbucket.org/lullis/nofollow',
+    url='https://github.com/lullis/nofollow',
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(),

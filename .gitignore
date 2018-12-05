@@ -10,6 +10,8 @@ syntax: glob
 /log
 /data
 /media
+dist
+build
 celerybeat-schedule
 .vagrant
 .vagrant.d/
