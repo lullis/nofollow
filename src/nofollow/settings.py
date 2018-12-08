@@ -92,7 +92,6 @@ MESSAGE_BROKER = {
     'USE_SSL': bool(int(os.getenv('NOFOLLOW_BROKER_USE_SSL', 0)))
 }
 
-
 # IPFS Storage
 IPFS_STORAGE_API_URL = os.getenv(
     'NOFOLLOW_IPFS_API_URL', 'http://localhost:5001/api/v0'
@@ -163,23 +162,25 @@ HTML_SANITIZERS = {
         'tags': {
             'a', 'h1', 'h2', 'h3', 'strong', 'em', 'p', 'ul', 'ol',
             'li', 'br', 'sub', 'sup', 'hr', 'quote', 'blockquote', 'img',
-            'code', 'pre'
+            'code', 'pre', 'div'
         },
         'attributes': {
             'a': ('href', 'name', 'target', 'title', 'id', 'rel'),
             'img': ('src', 'alt')
-        }
+        },
+        'empty': {'hr', 'a', 'br', 'img'}
     }
 }
 
 
-# Boris Spider Configuration
-
-BORIS_SPIDERS = {
-    'MERCURY_PARSER': {
-        'API_KEY': os.getenv('MERCURY_PARSER_API_KEY')
-        }
-    }
+# Boris Configuration
+BORIS = {
+    'SPIDERS': [
+        'boris.spiders.readability.ReadabilitySpider',
+        'boris.spiders.mercury.MercuryReaderSpider'
+    ],
+    'MERCURY_PARSER_KEY': os.getenv('MERCURY_PARSER_API_KEY')
+}
 
 
 # Logging Configuration
